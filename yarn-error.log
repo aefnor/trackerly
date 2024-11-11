@@ -1,0 +1,95 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @react-native-async-storage
+
+PATH: 
+  c:\Users\Austin\.vscode\extensions\ms-python.python-2024.18.1-win32-x64\python_files\deactivate\powershell;C:\Dev\trackerly-backend\Scripts;c:\Users\Austin\.vscode\extensions\ms-python.python-2024.18.1-win32-x64\python_files\deactivate\powershell;C:\Dev\trackerly-backend\Scripts;c:\Users\Austin\AppData\Local\Programs\cursor\resources\app\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft\jdk-11.0.16.101-hotspot\bin;E:\Vulkan\Bin;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\Git\cmd;C:\Program Files\Process Lasso\;C:\Users\Austin\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\WINDOWS\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Users\Austin\AppData\Local\Microsoft\WindowsApps;C:\Users\Austin\AppData\Roaming\npm;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet;c:\Users\Austin\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Austin\AppData\Local\Programs\Python\Launcher\;C:\Users\Austin\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Austin\.dotnet\tools;C:\Program Files (x86)\Mikero\DePboTools\bin;C:\Users\Austin\AppData\Local\GitHubDesktop\bin;C:\Users\Austin\AppData\Local\Programs\Python\Python311;C:\Users\Austin\.dotnet\tools;C:\Program Files\Neovim\bin;C:\Users\Austin\.cache\lm-studio\bin;C:\Program Files\Docker\Docker\resources\bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.12.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@react-native-async-storage: Request "https://registry.yarnpkg.com/@react-native-async-storage" returned a 405
+      at params.callback [as _callback] (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66154:18)
+      at self.callback (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
+      at Request.emit (node:events:518:28)
+      at Request.<anonymous> (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141862:10)
+      at Request.emit (node:events:518:28)
+      at IncomingMessage.<anonymous> (C:\Users\Austin\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141784:12)
+      at Object.onceWrapper (node:events:632:28)
+      at IncomingMessage.emit (node:events:530:35)
+      at endReadableNT (node:internal/streams/readable:1696:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+
+npm manifest: 
+  {
+    "name": "trackerly",
+    "main": "expo-router/entry",
+    "version": "1.0.0",
+    "scripts": {
+      "start": "expo start",
+      "reset-project": "node ./scripts/reset-project.js",
+      "android": "expo start --android",
+      "ios": "expo start --ios",
+      "web": "expo start --web",
+      "test": "jest --watchAll",
+      "lint": "expo lint"
+    },
+    "jest": {
+      "preset": "jest-expo"
+    },
+    "dependencies": {
+      "@expo/vector-icons": "^14.0.2",
+      "@react-native-community/datetimepicker": "^8.2.0",
+      "@react-navigation/native": "^6.0.2",
+      "@react-navigation/native-stack": "^6.11.0",
+      "@rneui/base": "^4.0.0-rc.7",
+      "@rneui/themed": "^4.0.0-rc.8",
+      "@tanstack/react-query": "^5.59.15",
+      "axios": "^1.7.7",
+      "expo": "~51.0.28",
+      "expo-constants": "~16.0.2",
+      "expo-font": "~12.0.9",
+      "expo-linking": "~6.3.1",
+      "expo-router": "~3.5.23",
+      "expo-splash-screen": "~0.27.5",
+      "expo-status-bar": "~1.12.1",
+      "expo-system-ui": "~3.0.7",
+      "expo-web-browser": "~13.0.3",
+      "react": "18.2.0",
+      "react-dom": "18.2.0",
+      "react-hook-form": "^7.53.1",
+      "react-native": "0.74.5",
+      "react-native-datepicker": "^1.7.2",
+      "react-native-elements": "^3.4.3",
+      "react-native-gesture-handler": "~2.16.1",
+      "react-native-picker-select": "^9.3.1",
+      "react-native-reanimated": "~3.10.1",
+      "react-native-safe-area-context": "4.10.5",
+      "react-native-screens": "3.31.1",
+      "react-native-vector-icons": "^10.2.0",
+      "react-native-web": "^0.19.13"
+    },
+    "devDependencies": {
+      "@babel/core": "^7.20.0",
+      "@types/jest": "^29.5.12",
+      "@types/react": "~18.2.45",
+      "@types/react-test-renderer": "^18.0.7",
+      "jest": "^29.2.1",
+      "jest-expo": "~51.0.3",
+      "react-test-renderer": "18.2.0",
+      "typescript": "~5.3.3"
+    },
+    "private": true
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

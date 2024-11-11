@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import api from '@/axios/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
 
 interface SignInFormData {
   email: string;
@@ -10,13 +13,22 @@ interface SignInFormData {
 
 export default function SignInScreen() {
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignInFormData>();
+  const navigation = useNavigation<any>();
 
-  const onSignIn = (data: SignInFormData) => {
-    api.post('/signin/', data).then((res) => {
+  const onSignIn = async (data: SignInFormData) => {
+    try {
+      const res = await api.post('/signin/', data);
       console.log(res);
-    }).catch((err) => {
+      // parse "data": {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFlZm5vckB5YWhvby5jb20ifQ.T-UvZ1-ETji07of54sFT-iDIZ2PFHEuRmXkGQOLlsoU"}
+      const token = res.data.token;
+      // store token in AsyncStorage
+      await AsyncStorage.setItem('token', token);
+      // redirect to home screen
+      navigation.navigate('index'); // Replace 'Home' with the name of your home screen
+    } catch (err) {
       console.log(err);
-    });
+      Alert.alert('Sign In Failed', 'Invalid email or password');
+    }
   };
 
   return (
@@ -31,6 +43,7 @@ export default function SignInScreen() {
             style={[styles.input, errors.email && styles.inputError]}
             placeholder="Email"
             onBlur={onBlur}
+            placeholderTextColor="#000"
             onChangeText={onChange}
             value={value}
             keyboardType="email-address"
@@ -48,6 +61,7 @@ export default function SignInScreen() {
           <TextInput
             style={[styles.input, errors.password && styles.inputError]}
             placeholder="Password"
+            placeholderTextColor="#000"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
