@@ -30,6 +30,10 @@ export default function RootLayout() {
       <Stack.Screen name="signup" options={({ navigation }) => ({
             header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
           })} />
+      <Stack.Screen name="agenda" options={({navigation}) => ({
+        header: () => <CustomHeader navigation={navigation} title="Agenda" path="/agenda" />,
+      })}/>
+      
     </Stack>
   );
 }

@@ -24,7 +24,7 @@ export default function SignInScreen() {
       // store token in AsyncStorage
       await AsyncStorage.setItem('token', token);
       // redirect to home screen
-      navigation.navigate('index'); // Replace 'Home' with the name of your home screen
+      navigation.navigate('profile'); // Replace 'Home' with the name of your home screen
     } catch (err) {
       console.log(err);
       Alert.alert('Sign In Failed', 'Invalid email or password');

@@ -31,6 +31,7 @@ export default function Index() {
       </ScrollView>
       <Button title="Go to Profile" onPress={() => router.push('/profile')} />
       <Button title="Go to Food Entry" onPress={() => router.push('/food-entry')} />
+      <Button title="Agenda" onPress={() => router.push('/agenda')} />
     </View>
   );
 }
