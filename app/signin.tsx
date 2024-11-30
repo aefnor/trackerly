@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, ActivityIndicator } f
 import { useForm, Controller } from 'react-hook-form';
 import api from '@/axios/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, createNavigationContainerRef } from '@react-navigation/native';
 
 
 interface SignInFormData {
@@ -14,7 +14,8 @@ interface SignInFormData {
 export default function SignInScreen() {
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignInFormData>();
   const navigation = useNavigation<any>();
-
+  const navigationRef = createNavigationContainerRef();
+  
   const onSignIn = async (data: SignInFormData) => {
     try {
       const res = await api.post('/signin/', data);

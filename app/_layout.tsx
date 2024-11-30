@@ -1,6 +1,26 @@
-import { Stack } from "expo-router";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { router } from "expo-router";
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
+import { createNavigationContainerRef } from '@react-navigation/native';
+import SignInScreen from "./signin";
+import ProfileScreen from "@/screens/ProfileScreen";
+import Signup from "./signup";
+import FoodEntry from "./food-entry";
+import FoodEntryScreen from "@/screens/FoodEntryScreen";
+import Index from "./index";
+import AgendaScreen from "./agenda";
+
+export const navigationRef = createNavigationContainerRef();
+
+export function navigate(name: string, params?: object) {
+  if (navigationRef.isReady()) {
+    // @ts-ignore
+    navigationRef.navigate(name, params);
+  }
+  else {
+    console.log("Navigation not ready");
+  }
+}
 function CustomHeader({ navigation, title, path }: { navigation: any, title: string, path: string }) {
   return (
     <View style={styles.header}>
@@ -15,26 +35,29 @@ function CustomHeader({ navigation, title, path }: { navigation: any, title: str
   );
 }
 export default function RootLayout() {
+  const Stack = createNativeStackNavigator();
   return (
-    <Stack>
-      <Stack.Screen name="index" options={({ navigation }) => ({
-            header: () => <CustomHeader navigation={navigation} title="Sign In" path="/signin" />,
-          })} />
-      <Stack.Screen name="profile" />
-      <Stack.Screen name="signin" options={({ navigation }) => ({
-            header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
-          })} />
-      <Stack.Screen name="food-entry" options={({ navigation }) => ({
-            header: () => <CustomHeader navigation={navigation} title="Food Entry" path="/food-entry" />,
-          })} />
-      <Stack.Screen name="signup" options={({ navigation }) => ({
-            header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
-          })} />
-      <Stack.Screen name="agenda" options={({navigation}) => ({
-        header: () => <CustomHeader navigation={navigation} title="Agenda" path="/agenda" />,
-      })}/>
-      
-    </Stack>
+      <Stack.Navigator>
+        <Stack.Screen name="index" component={() => <Index />} options={({ navigation } : {navigation: any}) => ({
+              header: () => <CustomHeader navigation={navigation} title="Sign In" path="/signin" />,
+            })} />
+        <Stack.Screen name="profile" component={() => <ProfileScreen />} />
+        <Stack.Screen name="signin" component={() => <SignInScreen />} options={({ navigation } : {navigation: any}) => ({
+              header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
+            })} />
+        <Stack.Screen name="food-entry" component={() => <FoodEntryScreen />} options={({ navigation } : {navigation: any}) => ({
+              header: () => <CustomHeader navigation={navigation} title="Food Entry" path="/food-entry" />,
+            })} />
+        <Stack.Screen name="signup" component={() => <Signup />} options={({ navigation } : {navigation: any}) => ({
+              header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
+            })} />
+        <Stack.Screen name="agenda" component={() => <AgendaScreen />} options={({navigation} : {navigation: any}) => ({
+          header: () => <CustomHeader navigation={navigation} title="Agenda" path="/agenda" />,
+        })}/>
+        
+      </Stack.Navigator>
+    // </NavigationContainer>
+
   );
 }
 const styles = StyleSheet.create({
