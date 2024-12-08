@@ -1,38 +1,53 @@
 import { Text, View, Button, ScrollView } from "react-native";
 import { router } from "expo-router";
-import { useState } from "react";
-import {dummyFoodEntries} from "../data/foodData";
-import FoodCard from "../components/FoodCard";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import SignInScreen from "./signin";
 
 export default function Index() {
-  const [entries, setEntries] = useState(dummyFoodEntries);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleDelete = (id: string) => {
-    setEntries(entries.filter((entry) => entry.id !== id));
-  };
+  useEffect(() => {
+    const checkAuth = async () => {
+      // check if user auth inside async storage
+      // if user is auth, set isAuthenticated to true
+      // else, set isAuthenticated to false
+      let userToken = await AsyncStorage.getItem("token");
+      if (userToken) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {/* Show Entries for Food Added */}
-      <ScrollView style={{ flexDirection: 'column', gap: 10, marginTop: 20 }}>
-        {/* List of Entries */}
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', justifyContent: 'center', alignItems: 'center' }}>Recent Entries</Text>
+    <>
+      {!isAuthenticated ? (
+        <SignInScreen />
+      ) : (
+        <View>
+          <Text>Welcome to Trackerly</Text>
+          <Button title="Sign In" onPress={() => router.push("/signin")} />
+          <Button title="Sign Up" onPress={() => router.push("/signup")} />
+          <Button
+            title="Food Entry"
+            onPress={() => router.push("/food-entry")}
+          />
+          {/* clear token button */}
+          <Button
+            title="Clear Token"
+            onPress={async () => {
+              await AsyncStorage.removeItem("token");
+            }}
+          />
+          <ScrollView>
+            <Text>Recent Food Entries</Text>
+          </ScrollView>
         </View>
-        {entries.map((entry, index) => (
-          <FoodCard entry={entry} onDelete={handleDelete} key={`entry-${entry.id}`} />
-        ))}
-      </ScrollView>
-      <Button title="Go to Profile" onPress={() => router.push('/profile')} />
-      <Button title="Go to Food Entry" onPress={() => router.push('/food-entry')} />
-      <Button title="Agenda" onPress={() => router.push('/agenda')} />
-    </View>
+      )}
+    </>
   );
 }
-

@@ -1,7 +1,13 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { router } from "expo-router";
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import { createNavigationContainerRef } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+} from "react-native";
+import { createNavigationContainerRef } from "@react-navigation/native";
 import SignInScreen from "./signin";
 import ProfileScreen from "@/screens/ProfileScreen";
 import Signup from "./signup";
@@ -16,20 +22,31 @@ export function navigate(name: string, params?: object) {
   if (navigationRef.isReady()) {
     // @ts-ignore
     navigationRef.navigate(name, params);
-  }
-  else {
+  } else {
     console.log("Navigation not ready");
   }
 }
-function CustomHeader({ navigation, title, path }: { navigation: any, title: string, path: string }) {
+function CustomHeader({
+  navigation,
+  title,
+  path,
+  hideLeftButton,
+  hideRightButton,
+}: {
+  navigation: any;
+  title: string;
+  path: string;
+  hideLeftButton?: boolean;
+  hideRightButton?: boolean;
+}) {
   return (
     <View style={styles.header}>
       <StatusBar hidden={true} />
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backButton}>Back</Text>
+        {!hideLeftButton && <Text style={styles.backButton}>Back</Text>}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => router.push(path as any)}>
-        <Text style={styles.title}>{title}</Text>
+        {!hideRightButton && <Text style={styles.title}>{title}</Text>}
       </TouchableOpacity>
     </View>
   );
@@ -37,47 +54,98 @@ function CustomHeader({ navigation, title, path }: { navigation: any, title: str
 export default function RootLayout() {
   const Stack = createNativeStackNavigator();
   return (
-      <Stack.Navigator>
-        <Stack.Screen name="index" component={() => <Index />} options={({ navigation } : {navigation: any}) => ({
-              header: () => <CustomHeader navigation={navigation} title="Sign In" path="/signin" />,
-            })} />
-        <Stack.Screen name="profile" component={() => <ProfileScreen />} />
-        <Stack.Screen name="signin" component={() => <SignInScreen />} options={({ navigation } : {navigation: any}) => ({
-              header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
-            })} />
-        <Stack.Screen name="food-entry" component={() => <FoodEntryScreen />} options={({ navigation } : {navigation: any}) => ({
-              header: () => <CustomHeader navigation={navigation} title="Food Entry" path="/food-entry" />,
-            })} />
-        <Stack.Screen name="signup" component={() => <Signup />} options={({ navigation } : {navigation: any}) => ({
-              header: () => <CustomHeader navigation={navigation} title="Sign Up" path="/signup" />,
-            })} />
-        <Stack.Screen name="agenda" component={() => <AgendaScreen />} options={({navigation} : {navigation: any}) => ({
-          header: () => <CustomHeader navigation={navigation} title="Agenda" path="/agenda" />,
-        })}/>
-        
-      </Stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="index"
+        component={() => <Index />}
+        options={({ navigation }: { navigation: any }) => ({
+          header: () => (
+            <CustomHeader
+              navigation={navigation}
+              title="Sign Up"
+              path="/signup"
+              hideLeftButton={true}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen name="profile" component={() => <ProfileScreen />} />
+      <Stack.Screen
+        name="signin"
+        component={() => <SignInScreen />}
+        options={({ navigation }: { navigation: any }) => ({
+          header: () => (
+            <CustomHeader
+              navigation={navigation}
+              title="Sign Up"
+              path="/signup"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="food-entry"
+        component={() => <FoodEntryScreen />}
+        options={({ navigation }: { navigation: any }) => ({
+          header: () => (
+            <CustomHeader
+              navigation={navigation}
+              title="Food Entry"
+              path="/food-entry"
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="signup"
+        component={() => <Signup />}
+        options={({ navigation }: { navigation: any }) => ({
+          header: () => (
+            <CustomHeader
+              navigation={navigation}
+              title="Sign Up"
+              path="/signup"
+              hideRightButton={true}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="agenda"
+        component={() => <AgendaScreen />}
+        options={({ navigation }: { navigation: any }) => ({
+          header: () => (
+            <CustomHeader
+              navigation={navigation}
+              title="Agenda"
+              path="/agenda"
+            />
+          ),
+        })}
+      />
+    </Stack.Navigator>
     // </NavigationContainer>
-
   );
 }
 const styles = StyleSheet.create({
   header: {
     height: 80,
-    backgroundColor: '#1E90FF',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#1E90FF",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     paddingRight: 40,
     paddingLeft: 20,
   },
   title: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   backButton: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
+    paddingLeft: "5%",
   },
 });
