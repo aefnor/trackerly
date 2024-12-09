@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "./signin";
+import api from "@/axios/api";
 
 export default function Index() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -14,7 +15,10 @@ export default function Index() {
       // else, set isAuthenticated to false
       let userToken = await AsyncStorage.getItem("token");
       if (userToken) {
-        setIsAuthenticated(true);
+        // make api call to check if token is valid "/check-user-token-valid/{token}"
+        let res = await api.get(`/check-user-token-valid/${userToken}`);
+        if (res.data.valid) setIsAuthenticated(true);
+        else setIsAuthenticated(false);
       } else {
         setIsAuthenticated(false);
       }
