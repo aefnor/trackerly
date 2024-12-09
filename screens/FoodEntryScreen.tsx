@@ -99,9 +99,9 @@ export default function FoodEntryScreen() {
         response.portion_size?.unit || ""
       }`
     );
-    setCalories(response.calories_per_portion || "");
-    setCarbohydrates(response.macronutrients?.carbohydrates || "");
-    setProteins(response.macronutrients?.proteins || "");
+    setCalories(String(response.calories_per_portion) || "");
+    setCarbohydrates(String(response.macronutrients?.carbohydrates) || "");
+    setProteins(String(response.macronutrients?.proteins) || "");
     setFats(response.macronutrients?.fats || "");
     setSaturatedFats(response.fats?.saturated_fats || "");
     setTransFats(response.fats?.trans_fats || "");
@@ -221,11 +221,11 @@ export default function FoodEntryScreen() {
         onChangeText={setFoodName}
       />
       {/* Quantity */}
-      <Text style={styles.label}>Quantity</Text>
+      <Text style={styles.label}>Portions</Text>
       <TextInput
         style={styles.input}
-        placeholder="Quantity (e.g., 1 serving or 200 grams)"
-        keyboardType="default"
+        placeholder="Portions (e.g., 1 serving or 200 grams)"
+        keyboardType="numeric"
         placeholderTextColor="#000"
         value={quantity}
         onChangeText={setQuantity}
@@ -236,7 +236,7 @@ export default function FoodEntryScreen() {
       <TextInput
         style={styles.input}
         placeholder="Calories Per Portion (Optional)"
-        keyboardType="default"
+        keyboardType="numeric"
         placeholderTextColor="#000"
         value={calories}
         onChangeText={setCalories}
@@ -249,7 +249,7 @@ export default function FoodEntryScreen() {
       <TextInput
         style={styles.input}
         placeholder="Carbohydrates (g)"
-        keyboardType="default"
+        keyboardType="numeric"
         placeholderTextColor="#000"
         value={carbohydrates}
         onChangeText={setCarbohydrates}
@@ -259,7 +259,7 @@ export default function FoodEntryScreen() {
       <TextInput
         style={styles.input}
         placeholder="Proteins (g)"
-        keyboardType="default"
+        keyboardType="numeric"
         placeholderTextColor="#000"
         value={proteins}
         onChangeText={setProteins}
