@@ -62,31 +62,34 @@ export default function RootLayout() {
       <Stack.Navigator>
         <Stack.Screen
           name="index"
+          options={{
+            headerShown: false,
+          }}
           component={() => <Index />}
-          options={({ navigation }: { navigation: any }) => ({
-            header: () => (
-              <CustomHeader
-                navigation={navigation}
-                title="Sign Up"
-                path="/signup"
-                hideLeftButton={true}
-              />
-            ),
-          })}
+          // options={({ navigation }: { navigation: any }) => ({
+          //   header: () => (
+          //     <CustomHeader
+          //       navigation={navigation}
+          //       title="Sign Up"
+          //       path="/signup"
+          //       hideLeftButton={true}
+          //     />
+          //   ),
+          // })}
         />
         <Stack.Screen name="profile" component={() => <ProfileScreen />} />
         <Stack.Screen
           name="signin"
           component={() => <SignInScreen />}
-          options={({ navigation }: { navigation: any }) => ({
-            header: () => (
-              <CustomHeader
-                navigation={navigation}
-                title="Sign Up"
-                path="/signup"
-              />
-            ),
-          })}
+          // options={({ navigation }: { navigation: any }) => ({
+          //   header: () => (
+          //     <CustomHeader
+          //       navigation={navigation}
+          //       title="Sign Up"
+          //       path="/signup"
+          //     />
+          //   ),
+          // })}
         />
         <Stack.Screen
           name="food-entry"
