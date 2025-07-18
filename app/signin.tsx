@@ -192,7 +192,8 @@ const authButtonStyles = StyleSheet.create({
     color: "#FFFDE7", // Light sunny yellow
     fontWeight: "bold",
     fontSize: 18,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
   },
   secondaryButton: {
     backgroundColor: "#FFE066", // Pineapple yellow
@@ -203,7 +204,8 @@ const authButtonStyles = StyleSheet.create({
     color: "#2E8B57", // Palm leaf green
     fontWeight: "bold",
     fontSize: 18,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
   },
 });
 
@@ -224,6 +226,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 30,
+    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
+    letterSpacing: 2,
   },
   input: {
     height: 50,
@@ -232,6 +236,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 10,
+    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
+    letterSpacing: 1.2,
   },
   inputError: {
     borderColor: "red",

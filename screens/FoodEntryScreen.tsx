@@ -145,17 +145,18 @@ export default function FoodEntryScreen() {
 
   return (
     <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-      <LinearGradient colors={["#FFB347", "#00C2A8"]} style={styles.container}>
+      <LinearGradient
+        colors={["#ff474aff", "#00c2a8bd"]}
+        style={styles.container}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
           <ScrollView
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="always"
-            keyboardDismissMode="none"
+            contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}
+            keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
           >
             {/* Header */}
             <View style={styles.header}>
@@ -532,7 +533,7 @@ export default function FoodEntryScreen() {
               onPress={handleSubmit}
             >
               <LinearGradient
-                colors={["#4caf50", "#388e3c"]}
+                colors={["#ff474aff", "#ff474aff"]}
                 style={styles.submitButtonGradient}
               >
                 <Text style={styles.submitButtonText}>Save Food Entry</Text>
@@ -550,6 +551,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    flexGrow: 1,
     padding: 20,
     paddingBottom: 40,
   },
@@ -562,15 +564,15 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#083D77", // Deep navy for high contrast
+    color: "#FFFFFF",
     textAlign: "center",
     marginBottom: 8,
   },
   headerSubtitle: {
     fontSize: 16,
-    color: "#155E75", // Muted sea blue
+    color: "#FFFFFF",
     textAlign: "center",
-    opacity: 0.9,
+    opacity: 1,
   },
   aiSection: {
     backgroundColor: "rgba(255, 255, 255, 0.12)",
@@ -593,7 +595,7 @@ const styles = StyleSheet.create({
   aiTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#005F73", // Teal ocean
+    color: "#FFFFFF",
   },
   sentenceInput: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -624,9 +626,12 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   parseButtonText: {
-    color: "#FFFFFF", // Ensures best contrast on vibrant gradient
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   successMessage: {
     backgroundColor: "rgba(0, 194, 168, 0.15)",
@@ -637,17 +642,25 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 194, 168, 0.5)",
   },
   successText: {
-    color: "#004D40", // Dark sea green
+    color: "#FFFFFF",
     textAlign: "center",
     fontSize: 16,
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   formSection: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 20,
+    backgroundColor: "rgba(5, 4, 4, 0.48)", // slightly higher opacity for contrast
+    borderRadius: 18,
+    padding: 24,
+    marginBottom: 24,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.15)",
+    borderColor: "rgba(255,255,255,0.25)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -662,7 +675,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#083D77", // Deep blue
+    color: "#FFFFFF",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   formRow: {
     flexDirection: "row",
@@ -673,14 +689,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   fieldLabel: {
-    color: "#FFEBCD", // Beachy off-yellow
+    color: "#FFFFFF",
     fontSize: 14,
     fontWeight: "500",
     marginBottom: 8,
-    opacity: 0.95,
+    opacity: 1,
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   required: {
-    color: "#FF6B6B", // Coral red
+    color: "#FF6B6B",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   input: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -689,7 +711,10 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: "#FFFFFF",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   textArea: {
     minHeight: 80,
@@ -715,5 +740,8 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
+    textShadowColor: "#000",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

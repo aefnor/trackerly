@@ -35,15 +35,17 @@ function CustomHeader({
   path,
   hideLeftButton,
   hideRightButton,
+  color,
 }: {
   navigation: any;
   title: string;
   path: string;
   hideLeftButton?: boolean;
   hideRightButton?: boolean;
+  color?: string;
 }) {
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { backgroundColor: color || "#16a2ffff" }]}>
       <StatusBar hidden={true} />
       <TouchableOpacity onPress={() => navigation.goBack()}>
         {!hideLeftButton && <Text style={styles.backButton}>Back</Text>}
@@ -141,7 +143,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   header: {
     height: 80,
-    backgroundColor: "#1E90FF",
+    // backgroundColor: color,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
