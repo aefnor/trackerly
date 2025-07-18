@@ -93,16 +93,19 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="food-entry"
+          options={{
+            headerShown: false,
+          }}
           component={() => <FoodEntryScreen />}
-          options={({ navigation }: { navigation: any }) => ({
-            header: () => (
-              <CustomHeader
-                navigation={navigation}
-                title="Food Entry"
-                path="/food-entry"
-              />
-            ),
-          })}
+          // options={({ navigation }: { navigation: any }) => ({
+          //   header: () => (
+          //     <CustomHeader
+          //       navigation={navigation}
+          //       title="Food Entry"
+          //       path="/food-entry"
+          //     />
+          //   ),
+          // })}
         />
         <Stack.Screen
           name="signup"

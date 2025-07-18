@@ -145,7 +145,7 @@ export default function FoodEntryScreen() {
 
   return (
     <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-      <LinearGradient colors={["#1e3c72", "#2a5298"]} style={styles.container}>
+      <LinearGradient colors={["#FFB347", "#00C2A8"]} style={styles.container}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
@@ -557,27 +557,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 30,
     paddingVertical: 20,
+    marginTop: 20,
   },
   headerTitle: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#bbdefb",
+    color: "#083D77", // Deep navy for high contrast
     textAlign: "center",
     marginBottom: 8,
   },
   headerSubtitle: {
     fontSize: 16,
-    color: "#b3d9ff",
+    color: "#155E75", // Muted sea blue
     textAlign: "center",
     opacity: 0.9,
   },
   aiSection: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
     borderRadius: 16,
     padding: 25,
     marginBottom: 25,
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    borderColor: "rgba(255, 255, 255, 0.25)",
   },
   aiHeader: {
     flexDirection: "row",
@@ -587,29 +588,30 @@ const styles = StyleSheet.create({
   aiIcon: {
     fontSize: 24,
     marginRight: 10,
+    color: "#FFB347",
   },
   aiTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#bbdefb",
+    color: "#005F73", // Teal ocean
   },
   sentenceInput: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 12,
     padding: 15,
-    color: "#ffffff",
+    color: "#FFFFFF",
     fontSize: 16,
     marginBottom: 20,
     minHeight: 60,
     textAlignVertical: "top",
     borderWidth: 2,
-    borderColor: "rgba(255, 255, 255, 0.3)",
+    borderColor: "rgba(255, 255, 255, 0.4)",
   },
   parseButton: {
     borderRadius: 12,
     overflow: "hidden",
     elevation: 4,
-    shadowColor: "#2196f3",
+    shadowColor: "#FFB347", // Matches gradient start
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -622,20 +624,20 @@ const styles = StyleSheet.create({
     minHeight: 50,
   },
   parseButtonText: {
-    color: "#ffffff",
+    color: "#FFFFFF", // Ensures best contrast on vibrant gradient
     fontSize: 16,
     fontWeight: "600",
   },
   successMessage: {
-    backgroundColor: "rgba(76, 175, 80, 0.2)",
+    backgroundColor: "rgba(0, 194, 168, 0.15)",
     borderRadius: 8,
     padding: 15,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "rgba(76, 175, 80, 0.5)",
+    borderColor: "rgba(0, 194, 168, 0.5)",
   },
   successText: {
-    color: "#c8e6c9",
+    color: "#004D40", // Dark sea green
     textAlign: "center",
     fontSize: 16,
   },
@@ -655,11 +657,12 @@ const styles = StyleSheet.create({
   sectionIcon: {
     fontSize: 20,
     marginRight: 10,
+    color: "#00C2A8",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#bbdefb",
+    color: "#083D77", // Deep blue
   },
   formRow: {
     flexDirection: "row",
@@ -670,20 +673,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   fieldLabel: {
-    color: "#e3f2fd",
+    color: "#FFEBCD", // Beachy off-yellow
     fontSize: 14,
     fontWeight: "500",
     marginBottom: 8,
-    opacity: 0.9,
+    opacity: 0.95,
   },
   required: {
-    color: "#ff8a80",
+    color: "#FF6B6B", // Coral red
   },
   input: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 8,
     padding: 12,
-    color: "#ffffff",
+    color: "#FFFFFF",
     fontSize: 16,
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.3)",
@@ -697,7 +700,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginTop: 20,
     elevation: 4,
-    shadowColor: "#4caf50",
+    shadowColor: "#00C2A8", // Matches gradient end
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -709,7 +712,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   submitButtonText: {
-    color: "#ffffff",
+    color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
   },

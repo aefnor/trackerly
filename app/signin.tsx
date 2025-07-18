@@ -177,7 +177,7 @@ const authButtonStyles = StyleSheet.create({
     marginTop: 24,
   },
   button: {
-    backgroundColor: "#1E2A38",
+    backgroundColor: "#00C2A8", // Tropical turquoise
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: "center",
@@ -189,18 +189,18 @@ const authButtonStyles = StyleSheet.create({
     elevation: 4,
   },
   buttonText: {
-    color: "#1E90FF",
+    color: "#FFFDE7", // Light sunny yellow
     fontWeight: "bold",
     fontSize: 18,
     letterSpacing: 1,
   },
   secondaryButton: {
-    backgroundColor: "#101522",
+    backgroundColor: "#FFE066", // Pineapple yellow
     borderWidth: 1,
-    borderColor: "#1E90FF",
+    borderColor: "#FFE066", // Coral red
   },
   secondaryButtonText: {
-    color: "#1E90FF",
+    color: "#2E8B57", // Palm leaf green
     fontWeight: "bold",
     fontSize: 18,
     letterSpacing: 1,
