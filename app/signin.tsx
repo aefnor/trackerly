@@ -52,11 +52,11 @@ export default function SignInScreen() {
 
   return (
     <AnimatedFruitBackground>
-      <View style={{ flex: 1 }}>
+      <View style={styles.absoluteContent}>
         <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
           <View style={styles.container}>
             <Text style={styles.title}>Trackerly</Text>
-
+            {/* ...existing code for inputs/buttons... */}
             <Controller
               control={control}
               rules={{
@@ -88,7 +88,6 @@ export default function SignInScreen() {
             {errors.email && (
               <Text style={styles.error}>{errors.email.message}</Text>
             )}
-
             <Controller
               control={control}
               // rules={{ required: 'Password is required', minLength: { value: 6, message: 'Password must be at least 6 characters' } }}
@@ -119,7 +118,6 @@ export default function SignInScreen() {
             {errors.password && (
               <Text style={styles.error}>{errors.password.message}</Text>
             )}
-
             <AuthButtons
               isSubmitting={isSubmitting}
               onSignIn={onSignIn}
@@ -210,6 +208,14 @@ const authButtonStyles = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
+  absoluteContent: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
   background: {
     flex: 1,
     width: "100%",
@@ -219,7 +225,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0)", // semi-transparent so fruits show through
   },
   title: {
     fontSize: 32,

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router";
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import ProfileScreen from "@/screens/ProfileScreen";
 import Signup from "./signup";
 import FoodEntry from "./food-entry";
 import FoodEntryScreen from "@/screens/FoodEntryScreen";
+import FoodEntryTabs from "@/screens/FoodEntryTabs";
 import Index from "./index";
 import AgendaScreen from "./agenda";
 
@@ -99,15 +100,6 @@ export default function RootLayout() {
             headerShown: false,
           }}
           component={() => <FoodEntryScreen />}
-          // options={({ navigation }: { navigation: any }) => ({
-          //   header: () => (
-          //     <CustomHeader
-          //       navigation={navigation}
-          //       title="Food Entry"
-          //       path="/food-entry"
-          //     />
-          //   ),
-          // })}
         />
         <Stack.Screen
           name="signup"

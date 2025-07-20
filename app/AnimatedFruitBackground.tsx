@@ -80,11 +80,12 @@ export default function AnimatedFruitBackground({
 
   return (
     <View style={styles.background}>
-      {/* Foreground content goes here */}
-      {children && <View style={styles.content}>{children}</View>}
+      {/* Fruits go behind all content */}
       {fruits.map((props, index) => (
         <FloatingFruit key={props.id} {...props} />
       ))}
+      {/* Foreground content goes above fruits */}
+      {children}
     </View>
   );
 }
@@ -97,8 +98,8 @@ const styles = StyleSheet.create({
   },
   fruit: {
     position: "absolute",
-    opacity: 0.85,
-    zIndex: 100,
+    opacity: 0.35,
+    zIndex: 0, // Behind content
   },
   fruitText: {
     // fontSize handled dynamically
@@ -107,12 +108,5 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 2 },
     textShadowRadius: 2,
   },
-  content: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-  },
+  // content style removed
 });
