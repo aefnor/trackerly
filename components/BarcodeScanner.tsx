@@ -7,7 +7,13 @@ import * as Haptics from "expo-haptics";
 import type { OpenFoodFactsResponse } from "../types/openfoodfacts";
 import IngredientDisplay from "./IngredientDisplay";
 
-export default function BarcodeScanner() {
+import type { Product } from "../types/openfoodfacts";
+
+type BarcodeScannerProps = {
+  onProductScanned?: (product: Product) => void;
+};
+
+export default function BarcodeScanner({ onProductScanned }: BarcodeScannerProps) {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
@@ -24,11 +30,19 @@ export default function BarcodeScanner() {
         `https://world.openfoodfacts.org/api/v0/product/${data}.json`
       );
       const json: OpenFoodFactsResponse = await res.json();
-      console.log(json);
+      console.log("BarcodeScanner: API response", json);
       setProduct(json.product ?? null);
+      if (json.product && onProductScanned) {
+        onProductScanned(json.product);
+      }
+      if (!json.product) {
+        alert("No product found for this barcode.");
+      }
       console.log("Product:", json.product?.product_name || "Not found");
     } catch (e) {
       setProduct(null);
+      // Do not call onProductScanned with null, just show error
+      alert("Error fetching product. See console for details.");
       console.error("Error fetching product:", e);
     }
   };

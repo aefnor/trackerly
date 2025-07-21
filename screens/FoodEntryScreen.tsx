@@ -1,3 +1,6 @@
+import BarcodeScanner from "../components/BarcodeScanner";
+import type { Product } from "../types/openfoodfacts";
+import { Modal } from "react-native";
 import React, { useState, useRef, useCallback, memo } from "react";
 import {
   View,
@@ -23,6 +26,7 @@ const { width } = Dimensions.get("window");
 
 export default function FoodEntryScreen() {
   // All your existing state variables
+  const [scannerVisible, setScannerVisible] = useState(false);
   const [foodName, setFoodName] = useState("");
   const [category, setCategory] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -141,7 +145,30 @@ export default function FoodEntryScreen() {
     }
   };
 
-  // ...existing code...
+  // Handler must be after all useState declarations
+  function handleProductScanned(product: Product) {
+    setFoodName(product.product_name || "");
+    setQuantity(product.quantity || "");
+    setCalories(product.nutriments?.energy ? String(product.nutriments.energy) : "");
+    setCarbohydrates(product.nutriments?.carbohydrates ? String(product.nutriments.carbohydrates) : "");
+    setProteins(product.nutriments?.proteins ? String(product.nutriments.proteins) : "");
+    setFats(product.nutriments?.fat ? String(product.nutriments.fat) : "");
+    setSaturatedFats(product.nutriments?.saturated_fat ? String(product.nutriments.saturated_fat) : "");
+    setTransFats(""); // Not always available
+    setFiber(product.nutriments?.fiber ? String(product.nutriments.fiber) : "");
+    setSugar(product.nutriments?.sugars ? String(product.nutriments.sugars) : "");
+    setCholesterol(product.nutriments?.cholesterol ? String(product.nutriments.cholesterol) : "");
+    setSodium(product.nutriments?.sodium ? String(product.nutriments.sodium) : "");
+    setVitamins(""); // Not always available
+    setAllergens(product.allergens || "");
+    setDietaryTags(product.labels || "");
+    setCustomRecipes("");
+    setFavoriteFoods("");
+    setMinerals("");
+    setNotes(product.ingredients_text || "");
+    setDate(new Date());
+    setScannerVisible(false);
+  }
 
   return (
     <Pressable
@@ -160,6 +187,27 @@ export default function FoodEntryScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
+            {/* Barcode Scanner Button */}
+            <TouchableOpacity
+              style={[styles.submitButton, { marginBottom: 16 }]}
+              onPress={() => setScannerVisible(true)}
+            >
+              <Text style={styles.submitButtonText}>Scan Barcode</Text>
+            </TouchableOpacity>
+
+            {/* Barcode Scanner Modal */}
+            <Modal visible={scannerVisible} animationType="slide">
+              <BarcodeScanner
+                onProductScanned={handleProductScanned}
+              />
+              <TouchableOpacity
+                style={{ alignSelf: "center", margin: 24, padding: 12, backgroundColor: "#FF474A", borderRadius: 8 }}
+                onPress={() => setScannerVisible(false)}
+              >
+                <Text style={{ color: "white", fontSize: 18 }}>Close Scanner</Text>
+              </TouchableOpacity>
+            </Modal>
+
             {/* Header */}
             <View style={styles.header}>
               <Text style={styles.headerTitle}>Food Tracker</Text>
