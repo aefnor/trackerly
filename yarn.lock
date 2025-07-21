@@ -2998,6 +2998,13 @@ expo-blur@^14.1.5:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-14.1.5.tgz#910712389e19286ccdc136275bf569f427aa05ef"
   integrity sha512-CCLJHxN4eoAl06ESKT3CbMasJ98WsjF9ZQEJnuxtDb9ffrYbZ+g9ru84fukjNUOTtc8A8yXE5z8NgY1l0OMrmQ==
 
+expo-camera@~16.1.11:
+  version "16.1.11"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-16.1.11.tgz#9b63c5e6807f960f54efec31fbe5d25a6a1dac83"
+  integrity sha512-etA5ZKoC6nPBnWWqiTmlX//zoFZ6cWQCCIdmpUHTGHAKd4qZNCkhPvBWbi8o32pDe57lix1V4+TPFgEcvPwsaA==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-constants@~17.1.5, expo-constants@~17.1.6:
   version "17.1.6"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-17.1.6.tgz#a31b019216f7f7bb4907aeffa2d6bf856751985e"
@@ -3511,6 +3518,11 @@ inline-style-prefixer@^7.0.1:
   integrity sha512-lhYo5qNTQp3EvSSp3sRvXMbVQTLrvGV6DycRMJ5dm2BLMiJ30wpXKdDdgX+GmJZ5uQMucwRKHamXSst3Sj/Giw==
   dependencies:
     css-in-js-utils "^3.1.0"
+
+install@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/install/-/install-0.13.0.tgz#6af6e9da9dd0987de2ab420f78e60d9c17260776"
+  integrity sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==
 
 invariant@^2.2.4:
   version "2.2.4"

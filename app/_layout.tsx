@@ -82,6 +82,12 @@ export default function RootLayout() {
         </Stack.Screen>
         <Stack.Screen name="signup">{() => <Signup />}</Stack.Screen>
         <Stack.Screen name="agenda">{() => <AgendaScreen />}</Stack.Screen>
+        <Stack.Screen name="ScanScreen" options={{ title: "Scan Food" }}>
+          {() => {
+            const ScanScreen = require("../screens/ScanScreen").default;
+            return <ScanScreen />;
+          }}
+        </Stack.Screen>
         {/* Register the landing screen here */}
         <Stack.Screen
           name="landing"

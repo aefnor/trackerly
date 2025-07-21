@@ -33,6 +33,13 @@ export default function LandingScreen() {
           </View>
           <View style={styles.buttonGroup}>
             <TouchableOpacity
+              style={[styles.tropicalButton, styles.scanButton]}
+              onPress={() => navigation.navigate("ScanScreen")}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.buttonText}>Scan Food Barcode</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
               style={[styles.tropicalButton, styles.foodButton]}
               onPress={() => navigation.navigate("food-entry")}
               activeOpacity={0.85}
@@ -75,6 +82,11 @@ export default function LandingScreen() {
 }
 
 const styles = StyleSheet.create({
+  scanButton: {
+    backgroundColor: "#FFD54D", // Gargoyle Gas
+    borderWidth: 2,
+    borderColor: "#FFD54D",
+  },
   titleWrapper: {
     backgroundColor: "#F52549", // Crayola's Red
     paddingVertical: 16,
