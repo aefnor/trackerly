@@ -144,7 +144,12 @@ export default function FoodEntryScreen() {
   // ...existing code...
 
   return (
-    <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+    <Pressable
+      onPress={() => {
+        if (Platform.OS !== "web") Keyboard.dismiss();
+      }}
+      style={{ flex: 1 }}
+    >
       <View style={styles.container}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -187,7 +192,7 @@ export default function FoodEntryScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="e.g., Turkey Sandwich"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  placeholderTextColor="#888"
                   value={foodName}
                   onChangeText={setFoodName}
                   autoCapitalize="none"
@@ -204,7 +209,7 @@ export default function FoodEntryScreen() {
                 <TextInput
                   style={styles.input}
                   placeholder="e.g., 1 serving or 200g"
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  placeholderTextColor="#888"
                   value={quantity}
                   onChangeText={setQuantity}
                   autoCapitalize="none"
@@ -228,7 +233,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 350"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={calories}
                     onChangeText={setCalories}
                     keyboardType="numeric"
@@ -244,7 +249,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 5"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={fiber}
                     onChangeText={setFiber}
                     keyboardType="numeric"
@@ -270,7 +275,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 45"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={carbohydrates}
                     onChangeText={setCarbohydrates}
                     keyboardType="numeric"
@@ -286,7 +291,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 25"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={proteins}
                     onChangeText={setProteins}
                     keyboardType="numeric"
@@ -304,7 +309,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 3"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={saturatedFats}
                     onChangeText={setSaturatedFats}
                     keyboardType="numeric"
@@ -320,7 +325,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 0"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={transFats}
                     onChangeText={setTransFats}
                     keyboardType="numeric"
@@ -338,7 +343,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 8"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={sugar}
                     onChangeText={setSugar}
                     keyboardType="numeric"
@@ -354,7 +359,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 65"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={cholesterol}
                     onChangeText={setCholesterol}
                     keyboardType="numeric"
@@ -382,7 +387,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., 650"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={sodium}
                     onChangeText={setSodium}
                     keyboardType="numeric"
@@ -398,7 +403,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., Vitamin A, C, D"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={vitamins}
                     onChangeText={setVitamins}
                     autoCapitalize="none"
@@ -415,7 +420,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., Iron, Calcium"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={minerals}
                     onChangeText={setMinerals}
                     autoCapitalize="none"
@@ -440,7 +445,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., Gluten, Dairy"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={allergens}
                     onChangeText={setAllergens}
                     autoCapitalize="none"
@@ -455,7 +460,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="e.g., Vegetarian, Low-carb"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={dietaryTags}
                     onChangeText={setDietaryTags}
                     autoCapitalize="none"
@@ -472,7 +477,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="Recipe name or details"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={customRecipes}
                     onChangeText={setCustomRecipes}
                     autoCapitalize="none"
@@ -487,7 +492,7 @@ export default function FoodEntryScreen() {
                   <TextInput
                     style={styles.input}
                     placeholder="Mark as favorite"
-                    placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                    placeholderTextColor="#888"
                     value={favoriteFoods}
                     onChangeText={setFavoriteFoods}
                     autoCapitalize="none"
@@ -511,7 +516,7 @@ export default function FoodEntryScreen() {
                 <TextInput
                   style={[styles.input, styles.textArea]}
                   placeholder="Add any personal observations, meal time, or other notes..."
-                  placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                  placeholderTextColor="#888"
                   value={notes}
                   onChangeText={setNotes}
                   multiline
@@ -705,16 +710,14 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   input: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backgroundColor: "#F3F4F6", // Light grey
     borderRadius: 8,
     padding: 12,
-    color: "#FFFFFF",
+    color: "#222",
     fontSize: 16,
     borderWidth: 1,
-    borderColor: "#FFFFFF",
-    textShadowColor: "#000",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    borderColor: "#FF474A",
+    // No text shadow for better readability on light background
   },
   textArea: {
     minHeight: 80,

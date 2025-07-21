@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import { Alert } from "react-native";
 import AnimatedFruitBackground from "./AnimatedFruitBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,7 +28,9 @@ export default function LandingScreen() {
     <AnimatedFruitBackground>
       <View style={styles.absoluteContent}>
         <View style={styles.container}>
-          <Text style={styles.title}>Welcome to Trackerly!</Text>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>Welcome to Trackerly!</Text>
+          </View>
           <View style={styles.buttonGroup}>
             <TouchableOpacity
               style={[styles.tropicalButton, styles.foodButton]}
@@ -67,15 +75,28 @@ export default function LandingScreen() {
 }
 
 const styles = StyleSheet.create({
+  titleWrapper: {
+    backgroundColor: "#F52549", // Crayola's Red
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 18,
+    marginBottom: 32,
+    shadowColor: "#FFD54D",
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    elevation: 6,
+    alignItems: "center",
+  },
   testingButton: {
-    backgroundColor: "#B2FF59", // Lime green for testing
+    backgroundColor: "#99BE1B", // Dark Lemon Lime
     borderWidth: 2,
-    borderColor: "#B2FF59",
+    borderColor: "#99BE1B",
   },
   signOutButton: {
-    backgroundColor: "#FFB300", // Mango orange
+    backgroundColor: "#FFD54D", // Gargoyle Gas
     borderWidth: 2,
-    borderColor: "#FFB300",
+    borderColor: "#FFD54D",
   },
   absoluteContent: {
     position: "absolute",
@@ -84,24 +105,26 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 1,
+    backgroundColor: "transparent",
   },
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     padding: 24,
-    backgroundColor: "rgba(255,255,255,0)",
+    backgroundColor: "rgba(255,255,255,0.92)", // Semi-transparent white for readability
   },
   title: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: "bold",
-    color: "#00C2A8",
-    marginBottom: 32,
+    color: "#fff",
     fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-    letterSpacing: 2,
-    textShadowColor: "#FFE066",
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 6,
+    letterSpacing: 3,
+    // textShadowColor: "#FFD54D", // Gargoyle Gas
+    textShadowOffset: { width: 1, height: 2 },
+    textShadowRadius: 8,
+    textAlign: "center",
+    textTransform: "uppercase",
   },
   buttonGroup: {
     width: "100%",
@@ -119,22 +142,22 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   foodButton: {
-    backgroundColor: "#FFE066", // Pineapple yellow
+    backgroundColor: "#FFD54D", // Gargoyle Gas
     borderWidth: 2,
-    borderColor: "#FFD700",
+    borderColor: "#FFD54D",
   },
   activityButton: {
-    backgroundColor: "#00C2A8", // Tropical turquoise
+    backgroundColor: "#99BE1B", // Dark Lemon Lime
     borderWidth: 2,
-    borderColor: "#00BFAE",
+    borderColor: "#99BE1B",
   },
   profileButton: {
-    backgroundColor: "#FF6F61", // Coral red
+    backgroundColor: "#F96574", // Begonia
     borderWidth: 2,
-    borderColor: "#FF8A65",
+    borderColor: "#F96574",
   },
   buttonText: {
-    color: "#2E8B57",
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 20,
     letterSpacing: 1.5,
