@@ -4,14 +4,16 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import * as Haptics from "expo-haptics";
 
+import type { OpenFoodFactsResponse } from "../types/openfoodfacts";
+import IngredientDisplay from "./IngredientDisplay";
+
 export default function BarcodeScanner() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
-  const [product, setProduct] = useState<{
-    name?: string;
-    brand?: string;
-  } | null>(null);
+  const [product, setProduct] = useState<
+    OpenFoodFactsResponse["product"] | null
+  >(null);
 
   const handleBarcodeScanned = async ({ data }: { data: string }) => {
     if (scanned) return;
@@ -21,11 +23,9 @@ export default function BarcodeScanner() {
       const res = await fetch(
         `https://world.openfoodfacts.org/api/v0/product/${data}.json`
       );
-      const json = await res.json();
-      setProduct({
-        name: json.product?.product_name,
-        brand: json.product?.brands,
-      });
+      const json: OpenFoodFactsResponse = await res.json();
+      console.log(json);
+      setProduct(json.product ?? null);
       console.log("Product:", json.product?.product_name || "Not found");
     } catch (e) {
       setProduct(null);
@@ -84,11 +84,12 @@ export default function BarcodeScanner() {
       {product && (
         <View style={{ padding: 16 }}>
           <Text style={{ color: "white", fontSize: 18 }}>
-            Product: {product.name || "Unknown"}
+            Product: {product.product_name || "Unknown"}
           </Text>
           <Text style={{ color: "white", fontSize: 16 }}>
-            Brand: {product.brand || "N/A"}
+            Brand: {product.brands || "N/A"}
           </Text>
+          <IngredientDisplay product={product} />
         </View>
       )}
     </View>
