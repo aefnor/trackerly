@@ -12,6 +12,7 @@ import {
   Keyboard,
   TouchableOpacity,
   ImageBackground,
+  Platform,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import api from "@/axios/api";
@@ -53,7 +54,12 @@ export default function SignInScreen() {
   return (
     <AnimatedFruitBackground>
       <View style={styles.absoluteContent}>
-        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
+        <Pressable
+          onPress={() => {
+            if (Platform.OS !== "web") Keyboard.dismiss();
+          }}
+          style={{ flex: 1 }}
+        >
           <View style={styles.container}>
             <Text style={styles.title}>Trackerly</Text>
             {/* ...existing code for inputs/buttons... */}
