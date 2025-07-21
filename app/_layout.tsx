@@ -63,70 +63,36 @@ export default function RootLayout() {
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
-        <Stack.Screen
-          name="index"
-          options={{
-            headerShown: false,
-          }}
-          component={() => <Index />}
-          // options={({ navigation }: { navigation: any }) => ({
-          //   header: () => (
-          //     <CustomHeader
-          //       navigation={navigation}
-          //       title="Sign Up"
-          //       path="/signup"
-          //       hideLeftButton={true}
-          //     />
-          //   ),
-          // })}
-        />
-        <Stack.Screen name="profile" component={() => <ProfileScreen />} />
-        <Stack.Screen
-          name="signin"
-          component={() => <SignInScreen />}
-          // options={({ navigation }: { navigation: any }) => ({
-          //   header: () => (
-          //     <CustomHeader
-          //       navigation={navigation}
-          //       title="Sign Up"
-          //       path="/signup"
-          //     />
-          //   ),
-          // })}
-        />
+        <Stack.Screen name="index" options={{ headerShown: false }}>
+          {() => <Index />}
+        </Stack.Screen>
+        <Stack.Screen name="profile">{() => <ProfileScreen />}</Stack.Screen>
+        <Stack.Screen name="signin">{() => <SignInScreen />}</Stack.Screen>
         <Stack.Screen
           name="food-entry"
           options={{
-            headerShown: false,
+            title: "Food Entry",
+            headerShown: true,
+            headerStyle: { backgroundColor: "#FF474A" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold", fontSize: 22 },
           }}
-          component={() => <FoodEntryScreen />}
-        />
+        >
+          {() => <FoodEntryScreen />}
+        </Stack.Screen>
+        <Stack.Screen name="signup">{() => <Signup />}</Stack.Screen>
+        <Stack.Screen name="agenda">{() => <AgendaScreen />}</Stack.Screen>
+        {/* Register the landing screen here */}
         <Stack.Screen
-          name="signup"
-          component={() => <Signup />}
-          options={({ navigation }: { navigation: any }) => ({
-            header: () => (
-              <CustomHeader
-                navigation={navigation}
-                title="Sign Up"
-                path="/signup"
-                hideRightButton={true}
-              />
-            ),
-          })}
-        />
-        <Stack.Screen
-          name="agenda"
-          component={() => <AgendaScreen />}
-          options={({ navigation }: { navigation: any }) => ({
-            header: () => (
-              <CustomHeader
-                navigation={navigation}
-                title="Agenda"
-                path="/agenda"
-              />
-            ),
-          })}
+          name="landing"
+          component={require("./LandingScreen").default}
+          options={{
+            title: "Welcome",
+            headerShown: true,
+            headerStyle: { backgroundColor: "#00C2A8" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold", fontSize: 22 },
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

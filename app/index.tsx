@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "./signin";
 import api from "@/axios/api";
+import LandingScreen from "./LandingScreen";
 
 export default function Index() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,31 +28,5 @@ export default function Index() {
     checkAuth();
   }, []);
 
-  return (
-    <>
-      {!isAuthenticated ? (
-        <SignInScreen />
-      ) : (
-        <View>
-          <Text>Welcome to Trackerly</Text>
-          <Button title="Sign In" onPress={() => router.push("/signin")} />
-          <Button title="Sign Up" onPress={() => router.push("/signup")} />
-          <Button
-            title="Food Entry"
-            onPress={() => router.push("/food-entry")}
-          />
-          {/* clear token button */}
-          <Button
-            title="Clear Token"
-            onPress={async () => {
-              await AsyncStorage.removeItem("token");
-            }}
-          />
-          <ScrollView>
-            <Text>Recent Food Entries</Text>
-          </ScrollView>
-        </View>
-      )}
-    </>
-  );
+  return <>{!isAuthenticated ? <SignInScreen /> : <LandingScreen />}</>;
 }

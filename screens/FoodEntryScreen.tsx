@@ -145,10 +145,7 @@ export default function FoodEntryScreen() {
 
   return (
     <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-      <LinearGradient
-        colors={["#ff474aff", "#00c2a8bd"]}
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
@@ -541,7 +538,7 @@ export default function FoodEntryScreen() {
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
-      </LinearGradient>
+      </View>
     </Pressable>
   );
 }
@@ -549,17 +546,20 @@ export default function FoodEntryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   scrollContent: {
     flexGrow: 1,
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 0,
     paddingBottom: 40,
   },
   header: {
     alignItems: "center",
-    marginBottom: 30,
-    paddingVertical: 20,
-    marginTop: 20,
+    marginBottom: 2,
+    paddingVertical: 0,
+    marginTop: 0,
   },
   headerTitle: {
     fontSize: 32,
@@ -650,15 +650,15 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   formSection: {
-    backgroundColor: "rgba(5, 4, 4, 0.48)", // slightly higher opacity for contrast
+    backgroundColor: "#FF474A", // Tropical red
     borderRadius: 18,
     padding: 24,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.25)",
-    shadowColor: "#000",
+    borderColor: "#FFB3B3",
+    shadowColor: "#FF474A",
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.18,
     shadowRadius: 12,
     elevation: 6,
   },
