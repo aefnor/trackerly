@@ -3,7 +3,7 @@ import { View, Button, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   return (
     <View style={styles.container}>

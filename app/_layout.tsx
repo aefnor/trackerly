@@ -1,12 +1,4 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { router, Stack } from "expo-router";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
 import {
   createNavigationContainerRef,
   NavigationContainer,
@@ -14,11 +6,12 @@ import {
 import SignInScreen from "./signin";
 import ProfileScreen from "@/screens/ProfileScreen";
 import Signup from "./signup";
-import FoodEntry from "./food-entry";
 import FoodEntryScreen from "@/screens/FoodEntryScreen";
-import FoodEntryTabs from "@/screens/FoodEntryTabs";
 import Index from "./index";
 import AgendaScreen from "./agenda";
+import EditProfile from "./editprofile";
+import ScanScreen from "@/screens/ScanScreen";
+import LandingScreen from "./LandingScreen";
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -30,33 +23,6 @@ export function navigate(name: string, params?: object) {
     console.log("Navigation not ready");
   }
 }
-function CustomHeader({
-  navigation,
-  title,
-  path,
-  hideLeftButton,
-  hideRightButton,
-  color,
-}: {
-  navigation: any;
-  title: string;
-  path: string;
-  hideLeftButton?: boolean;
-  hideRightButton?: boolean;
-  color?: string;
-}) {
-  return (
-    <View style={[styles.header, { backgroundColor: color || "#16a2ffff" }]}>
-      <StatusBar hidden={true} />
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        {!hideLeftButton && <Text style={styles.backButton}>Back</Text>}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.push(path as any)}>
-        {!hideRightButton && <Text style={styles.title}>{title}</Text>}
-      </TouchableOpacity>
-    </View>
-  );
-}
 
 export default function RootLayout() {
   const Stack = createNativeStackNavigator();
@@ -66,63 +32,61 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ headerShown: false }}>
           {() => <Index />}
         </Stack.Screen>
-        <Stack.Screen name="profile">{() => <ProfileScreen />}</Stack.Screen>
-        <Stack.Screen name="signin">{() => <SignInScreen />}</Stack.Screen>
+        <Stack.Screen
+          name="profile"
+          options={{
+            headerShown: false,
+          }}
+        >
+          {() => <ProfileScreen />}
+        </Stack.Screen>
+        <Stack.Screen name="signin" options={{ headerShown: false }}>
+          {() => <SignInScreen />}
+        </Stack.Screen>
         <Stack.Screen
           name="food-entry"
           options={{
-            title: "Food Entry",
-            headerShown: true,
-            headerStyle: { backgroundColor: "#FF474A" },
-            headerTintColor: "#fff",
-            headerTitleStyle: { fontWeight: "bold", fontSize: 22 },
+            headerShown: false,
           }}
         >
           {() => <FoodEntryScreen />}
         </Stack.Screen>
-        <Stack.Screen name="signup">{() => <Signup />}</Stack.Screen>
-        <Stack.Screen name="agenda">{() => <AgendaScreen />}</Stack.Screen>
-        <Stack.Screen name="ScanScreen" options={{ title: "Scan Food" }}>
-          {() => {
-            const ScanScreen = require("../screens/ScanScreen").default;
-            return <ScanScreen />;
+        <Stack.Screen name="signup" options={{ headerShown: false }}>
+          {() => <Signup />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="editprofile"
+          options={{
+            headerShown: false,
           }}
+        >
+          {() => <EditProfile />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="agenda"
+          options={{
+            headerShown: false,
+          }}
+        >
+          {() => <AgendaScreen />}
+        </Stack.Screen>
+        <Stack.Screen
+          name="ScanScreen"
+          options={{
+            headerShown: false,
+          }}
+        >
+          {() => <ScanScreen />}
         </Stack.Screen>
         {/* Register the landing screen here */}
         <Stack.Screen
           name="landing"
-          component={require("./LandingScreen").default}
+          component={LandingScreen}
           options={{
-            title: "Welcome",
-            headerShown: true,
-            headerStyle: { backgroundColor: "#00C2A8" },
-            headerTintColor: "#fff",
-            headerTitleStyle: { fontWeight: "bold", fontSize: 22 },
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-const styles = StyleSheet.create({
-  header: {
-    height: 80,
-    // backgroundColor: color,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    paddingRight: 40,
-    paddingLeft: 20,
-  },
-  title: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  backButton: {
-    color: "#fff",
-    fontSize: 18,
-    paddingLeft: "5%",
-  },
-});

@@ -1,15 +1,51 @@
 import React from "react";
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Platform,
+  View,
 } from "react-native";
-import { Alert } from "react-native";
-import AnimatedFruitBackground from "./AnimatedFruitBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
+import AnimatedFruitBackground from "./AnimatedFruitBackground";
+
+type IconName = React.ComponentProps<typeof Ionicons>["name"];
+
+interface ActionItemProps {
+  icon: IconName;
+  title: string;
+  description: string;
+  color: string;
+  onPress: () => void;
+}
+
+function ActionItem({
+  icon,
+  title,
+  description,
+  color,
+  onPress,
+}: ActionItemProps) {
+  return (
+    <TouchableOpacity
+      style={styles.actionItem}
+      onPress={onPress}
+      activeOpacity={0.86}
+    >
+      <View style={[styles.actionIcon, { backgroundColor: color }]}>
+        <Ionicons name={icon} size={22} color="#FFFFFF" />
+      </View>
+      <View style={styles.actionText}>
+        <Text style={styles.actionTitle}>{title}</Text>
+        <Text style={styles.actionDescription}>{description}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={20} color="#7C9188" />
+    </TouchableOpacity>
+  );
+}
 
 export default function LandingScreen() {
   const navigation = useNavigation<any>();
@@ -19,160 +55,208 @@ export default function LandingScreen() {
     navigation.reset({ index: 0, routes: [{ name: "signin" }] });
   };
 
-  const handleClearToken = async () => {
-    await AsyncStorage.removeItem("token");
-    Alert.alert("Token cleared for testing");
-  };
-
   return (
     <AnimatedFruitBackground>
-      <View style={styles.absoluteContent}>
-        <View style={styles.container}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>Welcome to Trackerly!</Text>
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.header}>
+          <Text style={styles.kicker}>Trackerly</Text>
+          <Text style={styles.title}>Today</Text>
+          <Text style={styles.subtitle}>
+            Keep meals, scans, and profile details close at hand.
+          </Text>
+        </View>
+
+        <View style={styles.summaryRow}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>0</Text>
+            <Text style={styles.summaryLabel}>Meals</Text>
           </View>
-          <View style={styles.buttonGroup}>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.scanButton]}
-              onPress={() => navigation.navigate("ScanScreen")}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Scan Food Barcode</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.foodButton]}
-              onPress={() => navigation.navigate("food-entry")}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Food Entry</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.activityButton]}
-              onPress={() => navigation.navigate("activity-entry")}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Activity Entry</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.profileButton]}
-              onPress={() => navigation.navigate("profile")}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.signOutButton]}
-              onPress={handleSignOut}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Sign Out</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.tropicalButton, styles.testingButton]}
-              onPress={handleClearToken}
-              activeOpacity={0.85}
-            >
-              <Text style={styles.buttonText}>Clear Token (Testing)</Text>
-            </TouchableOpacity>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>0</Text>
+            <Text style={styles.summaryLabel}>Scans</Text>
+          </View>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryValue}>--</Text>
+            <Text style={styles.summaryLabel}>Calories</Text>
           </View>
         </View>
-      </View>
+
+        <View style={styles.actions}>
+          <ActionItem
+            icon="barcode-outline"
+            title="Scan barcode"
+            description="Look up packaged foods fast."
+            color="#168A68"
+            onPress={() => navigation.navigate("ScanScreen")}
+          />
+          <ActionItem
+            icon="restaurant-outline"
+            title="Food entry"
+            description="Add a meal or describe what you ate."
+            color="#E06D2F"
+            onPress={() => navigation.navigate("food-entry")}
+          />
+          <ActionItem
+            icon="calendar-outline"
+            title="Agenda"
+            description="Review entries by day."
+            color="#3D74B6"
+            onPress={() => navigation.navigate("agenda")}
+          />
+          <ActionItem
+            icon="person-outline"
+            title="Profile"
+            description="Manage your account details."
+            color="#C64D6D"
+            onPress={() => navigation.navigate("profile")}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.signOutButton}
+          onPress={handleSignOut}
+          activeOpacity={0.86}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#7A271A" />
+          <Text style={styles.signOutText}>Sign out</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </AnimatedFruitBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  scanButton: {
-    backgroundColor: "#FFD54D", // Gargoyle Gas
-    borderWidth: 2,
-    borderColor: "#FFD54D",
-  },
-  titleWrapper: {
-    backgroundColor: "#F52549", // Crayola's Red
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 18,
-    marginBottom: 32,
-    shadowColor: "#FFD54D",
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-    elevation: 6,
+  content: {
+    flexGrow: 1,
     alignItems: "center",
+    paddingHorizontal: 18,
+    paddingTop: 42,
+    paddingBottom: 28,
   },
-  testingButton: {
-    backgroundColor: "#99BE1B", // Dark Lemon Lime
-    borderWidth: 2,
-    borderColor: "#99BE1B",
-  },
-  signOutButton: {
-    backgroundColor: "#FFD54D", // Gargoyle Gas
-    borderWidth: 2,
-    borderColor: "#FFD54D",
-  },
-  absoluteContent: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-    backgroundColor: "transparent",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
+  header: {
+    width: "100%",
+    maxWidth: 430,
     alignItems: "center",
-    padding: 24,
-    backgroundColor: "rgba(255,255,255,0.92)", // Semi-transparent white for readability
+    marginBottom: 20,
+  },
+  kicker: {
+    color: "#168A68",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginBottom: 8,
+    textAlign: "center",
   },
   title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#fff",
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-    letterSpacing: 3,
-    // textShadowColor: "#FFD54D", // Gargoyle Gas
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 8,
+    color: "#18352B",
+    fontSize: 38,
+    fontWeight: "800",
+    lineHeight: 44,
+    letterSpacing: 0,
     textAlign: "center",
-    textTransform: "uppercase",
   },
-  buttonGroup: {
+  subtitle: {
+    color: "#49645A",
+    fontSize: 16,
+    lineHeight: 23,
+    marginTop: 8,
+    maxWidth: 360,
+    textAlign: "center",
+  },
+  summaryRow: {
     width: "100%",
-    gap: 18,
-  },
-  tropicalButton: {
-    paddingVertical: 18,
-    borderRadius: 12,
-    alignItems: "center",
+    maxWidth: 430,
+    flexDirection: "row",
+    gap: 10,
     marginBottom: 18,
-    shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowOffset: { width: 0, height: 5 },
-    shadowRadius: 10,
-    elevation: 5,
   },
-  foodButton: {
-    backgroundColor: "#FFD54D", // Gargoyle Gas
-    borderWidth: 2,
-    borderColor: "#FFD54D",
+  summaryItem: {
+    flex: 1,
+    minHeight: 78,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    justifyContent: "center",
   },
-  activityButton: {
-    backgroundColor: "#99BE1B", // Dark Lemon Lime
-    borderWidth: 2,
-    borderColor: "#99BE1B",
+  summaryValue: {
+    color: "#18352B",
+    fontSize: 23,
+    fontWeight: "800",
+    lineHeight: 28,
   },
-  profileButton: {
-    backgroundColor: "#F96574", // Begonia
-    borderWidth: 2,
-    borderColor: "#F96574",
+  summaryLabel: {
+    color: "#647970",
+    fontSize: 13,
+    fontWeight: "700",
+    lineHeight: 18,
+    marginTop: 2,
   },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 20,
-    letterSpacing: 1.5,
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
+  actions: {
+    width: "100%",
+    maxWidth: 430,
+    gap: 12,
+  },
+  actionItem: {
+    minHeight: 76,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    shadowColor: "#0F2E24",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
+  },
+  actionIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  actionText: {
+    flex: 1,
+    paddingRight: 8,
+  },
+  actionTitle: {
+    color: "#18352B",
+    fontSize: 16,
+    fontWeight: "800",
+    lineHeight: 21,
+  },
+  actionDescription: {
+    color: "#647970",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  signOutButton: {
+    width: "100%",
+    maxWidth: 430,
+    minHeight: 50,
+    borderRadius: 8,
+    borderColor: "#F4B5A6",
+    borderWidth: 1,
+    backgroundColor: "#FFF6F3",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 18,
+  },
+  signOutText: {
+    color: "#7A271A",
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: 0,
   },
 });

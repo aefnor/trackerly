@@ -1,26 +1,25 @@
 import React from "react";
-import AnimatedFruitBackground from "./AnimatedFruitBackground";
 import {
-  View,
+  ActivityIndicator,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
-  Alert,
-  ActivityIndicator,
-  Pressable,
-  Keyboard,
   TouchableOpacity,
-  ImageBackground,
-  Platform,
+  View,
 } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import api from "@/axios/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  useNavigation,
-  createNavigationContainerRef,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { isAxiosError } from "axios";
+import { Controller, useForm } from "react-hook-form";
+
+import api from "@/axios/api";
+import AnimatedFruitBackground from "./AnimatedFruitBackground";
 
 interface SignInFormData {
   email: string;
@@ -28,237 +27,263 @@ interface SignInFormData {
 }
 
 export default function SignInScreen() {
+  const [signInError, setSignInError] = React.useState("");
+  const navigation = useNavigation<any>();
   const {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignInFormData>();
-  const navigation = useNavigation<any>();
+  } = useForm<SignInFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   const onSignIn = async (data: SignInFormData) => {
+    setSignInError("");
     try {
       const res = await api.post("/signin/", data);
-      console.log(res);
-      // parse "data": {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFlZm5vckB5YWhvby5jb20ifQ.T-UvZ1-ETji07of54sFT-iDIZ2PFHEuRmXkGQOLlsoU"}
-      const token = res.data.token;
-      // store token in AsyncStorage
-      await AsyncStorage.setItem("token", token);
-      // redirect to landing page
-      navigation.navigate("landing"); // Now goes to the new landing page
+      await AsyncStorage.setItem("token", res.data.token);
+      navigation.reset({ index: 0, routes: [{ name: "landing" }] });
     } catch (err) {
-      console.log(err);
-      Alert.alert("Sign In Failed", "Invalid email or password");
+      let message = "Unable to sign in. Please try again.";
+      const isApiError = isAxiosError(err);
+
+      if (isApiError) {
+        if (err.response?.status === 401) {
+          message = "Invalid email or password.";
+        } else if (err.code === "ECONNABORTED") {
+          message = "The sign-in request timed out. Please try again.";
+        } else if (!err.response) {
+          message = "Unable to reach the server. Check your connection and try again.";
+        } else if (typeof err.response.data?.detail === "string") {
+          message = err.response.data.detail;
+        }
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+
+      setSignInError(message);
+      if (!isApiError || err.response?.status !== 401) {
+        Alert.alert("Sign In Failed", message);
+      }
     }
   };
 
   return (
     <AnimatedFruitBackground>
-      <View style={styles.absoluteContent}>
+      <KeyboardAvoidingView
+        style={styles.screen}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
         <Pressable
           onPress={() => {
             if (Platform.OS !== "web") Keyboard.dismiss();
           }}
-          style={{ flex: 1 }}
+          style={styles.screen}
         >
-          <View style={styles.container}>
-            <Text style={styles.title}>Trackerly</Text>
-            {/* ...existing code for inputs/buttons... */}
-            <Controller
-              control={control}
-              rules={{
-                required: "Email is required",
-                pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
-              }}
-              render={({
-                field: { onChange, onBlur, value },
-              }: {
-                field: {
-                  onChange: (text: string) => void;
-                  onBlur: () => void;
-                  value: string;
-                };
-              }) => (
-                <TextInput
-                  style={[styles.input, errors.email && styles.inputError]}
-                  placeholder="Email"
-                  onBlur={onBlur}
-                  placeholderTextColor="#000"
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              )}
-              name="email"
-            />
-            {errors.email && (
-              <Text style={styles.error}>{errors.email.message}</Text>
-            )}
-            <Controller
-              control={control}
-              // rules={{ required: 'Password is required', minLength: { value: 6, message: 'Password must be at least 6 characters' } }}
-              render={({
-                field: { onChange, onBlur, value },
-              }: {
-                field: {
-                  onChange: (text: string) => void;
-                  onBlur: () => void;
-                  value: string;
-                };
-              }) => (
-                <TextInput
-                  style={[styles.input, errors.password && styles.inputError]}
-                  placeholder="Password"
-                  placeholderTextColor="#000"
-                  onBlur={() => {
-                    onBlur();
-                    Keyboard.dismiss();
-                  }}
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-              )}
-              name="password"
-            />
-            {errors.password && (
-              <Text style={styles.error}>{errors.password.message}</Text>
-            )}
-            <AuthButtons
-              isSubmitting={isSubmitting}
-              onSignIn={onSignIn}
-              handleSubmit={handleSubmit}
-              navigation={navigation}
-            />
-          </View>
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.brandBlock}>
+              <Text style={styles.brand}>Trackerly</Text>
+              <Text style={styles.subtitle}>Log meals, scan foods, and keep your day on track.</Text>
+            </View>
+
+            <View style={styles.formPanel}>
+              <Text style={styles.formTitle}>Sign in</Text>
+
+              <Text style={styles.label}>Email</Text>
+              <Controller
+                control={control}
+                rules={{
+                  required: "Email is required",
+                  pattern: { value: /\S+@\S+\.\S+/, message: "Invalid email" },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    style={[styles.input, errors.email && styles.inputError]}
+                    placeholder="you@example.com"
+                    placeholderTextColor="#8A9590"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                )}
+                name="email"
+              />
+              {errors.email ? (
+                <Text style={styles.error}>{errors.email.message}</Text>
+              ) : null}
+
+              <Text style={styles.label}>Password</Text>
+              <Controller
+                control={control}
+                rules={{ required: "Password is required" }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    style={[styles.input, errors.password && styles.inputError]}
+                    placeholder="Password"
+                    placeholderTextColor="#8A9590"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    value={value}
+                    secureTextEntry
+                  />
+                )}
+                name="password"
+              />
+              {errors.password ? (
+                <Text style={styles.error}>{errors.password.message}</Text>
+              ) : null}
+              {signInError ? <Text style={styles.error}>{signInError}</Text> : null}
+
+              <TouchableOpacity
+                style={[styles.primaryButton, isSubmitting && styles.disabledButton]}
+                onPress={handleSubmit(onSignIn)}
+                activeOpacity={0.86}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                  <Text style={styles.primaryButtonText}>Sign in</Text>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.secondaryButton}
+                onPress={() => navigation.navigate("signup")}
+                activeOpacity={0.86}
+              >
+                <Text style={styles.secondaryButtonText}>Create an account</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </Pressable>
-      </View>
+      </KeyboardAvoidingView>
     </AnimatedFruitBackground>
   );
 }
 
-function AuthButtons({
-  isSubmitting,
-  onSignIn,
-  handleSubmit,
-  navigation,
-}: {
-  isSubmitting: boolean;
-  onSignIn: (data: SignInFormData) => Promise<void>;
-  handleSubmit: (
-    callback: (data: SignInFormData) => Promise<void>
-  ) => () => void;
-  navigation: any;
-}) {
-  return (
-    <View style={styles.buttonContainer}>
-      {isSubmitting ? (
-        <ActivityIndicator size="large" color="#1E90FF" />
-      ) : (
-        <TouchableOpacity
-          style={authButtonStyles.button}
-          onPress={handleSubmit(onSignIn)}
-          activeOpacity={0.8}
-        >
-          <Text style={authButtonStyles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        style={[authButtonStyles.button, authButtonStyles.secondaryButton]}
-        onPress={() => navigation.navigate("signup")}
-        activeOpacity={0.8}
-      >
-        <Text style={authButtonStyles.secondaryButtonText}>Sign Up</Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-const authButtonStyles = StyleSheet.create({
-  buttonContainer: {
-    width: "100%",
-    gap: 16,
-    marginTop: 24,
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
   },
-  button: {
-    backgroundColor: "#00C2A8", // Tropical turquoise
-    paddingVertical: 14,
-    borderRadius: 10,
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 28,
+  },
+  brandBlock: {
+    width: "100%",
+    maxWidth: 430,
+    alignSelf: "center",
     alignItems: "center",
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
+    marginBottom: 22,
+  },
+  brand: {
+    color: "#18352B",
+    fontSize: 38,
+    fontWeight: "800",
+    letterSpacing: 0,
+    lineHeight: 44,
+    textAlign: "center",
+  },
+  subtitle: {
+    color: "#49645A",
+    fontSize: 16,
+    lineHeight: 23,
+    marginTop: 8,
+    maxWidth: 330,
+    textAlign: "center",
+  },
+  formPanel: {
+    width: "100%",
+    maxWidth: 430,
+    alignSelf: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.94)",
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 18,
+    shadowColor: "#0F2E24",
+    shadowOpacity: 0.12,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
     elevation: 4,
   },
-  buttonText: {
-    color: "#FFFDE7", // Light sunny yellow
-    fontWeight: "bold",
-    fontSize: 18,
-    letterSpacing: 1.5,
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-  },
-  secondaryButton: {
-    backgroundColor: "#FFE066", // Pineapple yellow
-    borderWidth: 1,
-    borderColor: "#FFE066", // Coral red
-  },
-  secondaryButtonText: {
-    color: "#2E8B57", // Palm leaf green
-    fontWeight: "bold",
-    fontSize: 18,
-    letterSpacing: 1.5,
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-  },
-});
-
-const styles = StyleSheet.create({
-  absoluteContent: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-  },
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0)", // semi-transparent so fruits show through
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
+  formTitle: {
+    color: "#18352B",
+    fontSize: 22,
+    fontWeight: "700",
+    lineHeight: 28,
+    marginBottom: 18,
     textAlign: "center",
-    marginBottom: 30,
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-    letterSpacing: 2,
+  },
+  label: {
+    color: "#29483D",
+    fontSize: 14,
+    fontWeight: "700",
+    lineHeight: 18,
+    marginBottom: 7,
   },
   input: {
     height: 50,
-    borderColor: "#ddd",
+    borderColor: "#C9DDD3",
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    fontFamily: "Montserrat, Avenir, Helvetica Neue, Arial, sans-serif",
-    letterSpacing: 1.2,
+    color: "#18352B",
+    fontSize: 16,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    backgroundColor: "#FFFFFF",
   },
   inputError: {
-    borderColor: "red",
+    borderColor: "#D64545",
   },
   error: {
-    color: "red",
+    color: "#B42318",
+    fontSize: 13,
+    lineHeight: 18,
     marginBottom: 10,
   },
-  buttonContainer: {
-    marginTop: 20,
+  primaryButton: {
+    minHeight: 52,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#168A68",
+    marginTop: 8,
+  },
+  disabledButton: {
+    opacity: 0.72,
+  },
+  primaryButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: 0,
+  },
+  secondaryButton: {
+    minHeight: 50,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#168A68",
+    borderWidth: 1,
+    marginTop: 12,
+    backgroundColor: "#FFFFFF",
+  },
+  secondaryButtonText: {
+    color: "#168A68",
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: 0,
   },
 });

@@ -1,112 +1,69 @@
-import React, { useRef, useEffect } from "react";
-import {
-  View,
-  Animated,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Easing,
-} from "react-native";
-
-const FRUIT_EMOJIS = ["🍌", "🍓", "🍉", "🍊", "🍎", "🍒", "🍍", "🥝", "🍑"];
-const FRUIT_COUNT = 10; // Number of floating fruits
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
-// Helper to get a random number between min/max
-const rand = (min: number, max: number) => Math.random() * (max - min) + min;
-
-function FloatingFruit({
-  emoji,
-  startX,
-  delay,
-  speed,
-  size,
-}: {
-  emoji: string;
-  startX: number;
-  delay: number;
-  speed: number;
-  size: number;
-}) {
-  const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
-
-  useEffect(() => {
-    const animate = () => {
-      translateY.setValue(SCREEN_HEIGHT);
-      Animated.timing(translateY, {
-        toValue: -size,
-        duration: speed,
-        delay,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start(() => animate()); // Loop forever
-    };
-    animate();
-  }, [translateY, delay, speed, size]);
-
-  return (
-    <Animated.View
-      style={[
-        styles.fruit,
-        {
-          left: startX,
-          top: 0,
-          transform: [{ translateY }],
-        },
-      ]}
-      pointerEvents="none"
-    >
-      <Text style={[styles.fruitText, { fontSize: size }]}>{emoji}</Text>
-    </Animated.View>
-  );
-}
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function AnimatedFruitBackground({
   children,
 }: {
   children?: React.ReactNode;
 }) {
-  // Generate random fruit configs once
-  const fruits = React.useMemo(() => {
-    return Array.from({ length: FRUIT_COUNT }).map((_, i) => ({
-      emoji: FRUIT_EMOJIS[Math.floor(Math.random() * FRUIT_EMOJIS.length)],
-      startX: rand(10, SCREEN_WIDTH - 50),
-      delay: rand(0, 4000),
-      speed: rand(4000, 9000),
-      size: rand(32, 54),
-      id: i + "-" + Math.random(),
-    }));
+  React.useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const htmlOverflowX = document.documentElement.style.overflowX;
+    const bodyOverflowX = document.body.style.overflowX;
+    const bodyMaxWidth = document.body.style.maxWidth;
+
+    document.documentElement.style.overflowX = "hidden";
+    document.body.style.overflowX = "hidden";
+    document.body.style.maxWidth = "100vw";
+
+    return () => {
+      document.documentElement.style.overflowX = htmlOverflowX;
+      document.body.style.overflowX = bodyOverflowX;
+      document.body.style.maxWidth = bodyMaxWidth;
+    };
   }, []);
 
   return (
-    <View style={styles.background}>
-      {/* Fruits go behind all content */}
-      {fruits.map((props, index) => (
-        <FloatingFruit key={props.id} {...props} />
-      ))}
-      {/* Foreground content goes above fruits */}
-      {children}
-    </View>
+    <LinearGradient
+      colors={["#F7FAF8", "#EAF7F1", "#FFF7E8"]}
+      locations={[0, 0.58, 1]}
+      style={styles.background}
+    >
+      <View style={[styles.accentBand, styles.topBand]} />
+      <View style={[styles.accentBand, styles.bottomBand]} />
+      <View style={styles.content}>{children}</View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "#fff",
     position: "relative",
+    overflow: "hidden",
+    width: "100%",
   },
-  fruit: {
+  content: {
+    flex: 1,
+    width: "100%",
+    zIndex: 1,
+  },
+  accentBand: {
     position: "absolute",
-    opacity: 0.35,
-    zIndex: 0, // Behind content
+    left: 0,
+    right: 0,
+    height: 170,
+    opacity: 0.45,
+    transform: [{ rotate: "-8deg" }, { scaleX: 1.18 }],
   },
-  fruitText: {
-    // fontSize handled dynamically
-    // Optional: Add a soft shadow to make them pop
-    textShadowColor: "#aaa",
-    textShadowOffset: { width: 1, height: 2 },
-    textShadowRadius: 2,
+  topBand: {
+    top: -92,
+    backgroundColor: "#BFEAD7",
   },
-  // content style removed
+  bottomBand: {
+    bottom: -104,
+    backgroundColor: "#FFE1A8",
+  },
 });

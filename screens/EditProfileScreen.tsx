@@ -1,124 +1,171 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Button, ScrollView, Alert } from 'react-native';
+import React, { useState } from "react";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
+import AnimatedFruitBackground from "../app/AnimatedFruitBackground";
+import MainPageButton from "../components/MainPageButton";
 
-type EditProfileScreenNavigationProp = any;
+type EditProfileScreenNavigationProp = {
+  goBack: () => void;
+};
 
-const EditProfileScreen = ({ navigation }: { navigation: EditProfileScreenNavigationProp }) => {
-  // State variables for the profile fields
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("johndoe@example.com");
-  const [goal, setGoal] = useState("Lose 10 lbs");
+export default function EditProfileScreen({
+  navigation,
+}: {
+  navigation: EditProfileScreenNavigationProp;
+}) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [goal, setGoal] = useState("");
 
   const handleSave = () => {
-    // Handle save action, like updating user profile data
     Alert.alert("Profile Updated", "Your changes have been saved.");
-    navigation.goBack(); // Go back to ProfileScreen after saving
+    navigation.goBack();
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Profile Picture */}
-      <View style={styles.profileImageContainer}>
-        <Image
-          source={{ uri: 'https://example.com/profile-picture.png' }} // Replace with actual profile picture URL
-          style={styles.profileImage}
-        />
-        <TouchableOpacity style={styles.editImageButton}>
-          <Text style={styles.editImageText}>Edit</Text>
-        </TouchableOpacity>
-      </View>
+    <AnimatedFruitBackground>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <MainPageButton />
 
-      {/* Profile Fields */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder="Enter your name"
-        />
-        
-        <Text style={styles.label}>Email</Text>
-        <TextInput
-          style={styles.input}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Enter your email"
-          keyboardType="email-address"
-        />
-        
-        <Text style={styles.label}>Fitness Goal</Text>
-        <TextInput
-          style={styles.input}
-          value={goal}
-          onChangeText={setGoal}
-          placeholder="Enter your fitness goal"
-        />
-      </View>
+        <View style={styles.header}>
+          <Text style={styles.kicker}>Profile</Text>
+          <Text style={styles.title}>Edit details</Text>
+          <Text style={styles.subtitle}>
+            Keep your account and health goal current.
+          </Text>
+        </View>
 
-      {/* Save Button */}
-      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.formPanel}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder="Enter your name"
+            placeholderTextColor="#8A9590"
+          />
+
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            placeholderTextColor="#8A9590"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.label}>Fitness goal</Text>
+          <TextInput
+            style={styles.input}
+            value={goal}
+            onChangeText={setGoal}
+            placeholder="Enter your fitness goal"
+            placeholderTextColor="#8A9590"
+          />
+
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={handleSave}
+            activeOpacity={0.86}
+          >
+            <Text style={styles.primaryButtonText}>Save changes</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </AnimatedFruitBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  content: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 20,
+    paddingVertical: 28,
   },
-  profileImageContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  editImageButton: {
-    position: 'absolute',
-    bottom: 0,
-    right: 10,
-    backgroundColor: '#3b5998',
-    borderRadius: 15,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-  },
-  editImageText: {
-    color: '#fff',
-    fontSize: 12,
-  },
-  inputContainer: {
+  header: {
+    width: "100%",
+    maxWidth: 430,
+    alignItems: "center",
     marginBottom: 20,
   },
-  label: {
+  kicker: {
+    color: "#168A68",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  title: {
+    color: "#18352B",
+    fontSize: 34,
+    fontWeight: "800",
+    lineHeight: 40,
+    letterSpacing: 0,
+    textAlign: "center",
+  },
+  subtitle: {
+    color: "#49645A",
     fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 5,
+    lineHeight: 23,
+    marginTop: 8,
+    maxWidth: 360,
+    textAlign: "center",
+  },
+  formPanel: {
+    width: "100%",
+    maxWidth: 430,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.94)",
+    padding: 18,
+  },
+  label: {
+    color: "#29483D",
+    fontSize: 14,
+    fontWeight: "700",
+    lineHeight: 18,
+    marginBottom: 7,
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
+    height: 50,
+    borderColor: "#C9DDD3",
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-  },
-  saveButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: '#fff',
+    borderRadius: 8,
+    color: "#18352B",
     fontSize: 16,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    backgroundColor: "#FFFFFF",
+  },
+  primaryButton: {
+    minHeight: 52,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#168A68",
+    marginTop: 8,
+  },
+  primaryButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: 0,
   },
 });
-
-export default EditProfileScreen;

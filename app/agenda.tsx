@@ -1,170 +1,341 @@
-import React, {Component} from 'react';
-import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
-const testIDs = {
-    menu: {
-      CONTAINER: 'menu',
-      CALENDARS: 'calendars_btn',
-      CALENDAR_LIST: 'calendar_list_btn',
-      HORIZONTAL_LIST: 'horizontal_list_btn',
-      AGENDA: 'agenda_btn',
-      AGENDA_INFINITE: 'agenda_infinite_btn',
-      EXPANDABLE_CALENDAR: 'expandable_calendar_btn',
-      WEEK_CALENDAR: 'week_calendar_btn',
-      TIMELINE_CALENDAR: 'timeline_calendar_btn',
-      PLAYGROUND: 'playground_btn'
-    },
-    calendars: {
-      CONTAINER: 'calendars',
-      FIRST: 'first_calendar',
-      LAST: 'last_calendar'
-    },
-    calendarList: {CONTAINER: 'calendarList'},
-    horizontalList: {CONTAINER: 'horizontalList'},
-    agenda: {
-      CONTAINER: 'agenda',
-      ITEM: 'item'
-    },
-    expandableCalendar: {CONTAINER: 'expandableCalendar'},
-    weekCalendar: {CONTAINER: 'weekCalendar'}
-  };
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-interface State {
-  items?: AgendaSchedule;
+import AnimatedFruitBackground from "./AnimatedFruitBackground";
+import MainPageButton from "../components/MainPageButton";
+import api from "@/axios/api";
+
+type AgendaEntry = {
+  id: number;
+  food_name: string;
+  category?: string | null;
+  date: string;
+  calories?: number | null;
+  portion_size?: { amount?: string; unit?: string } | null;
+};
+
+function formatDay(date: Date) {
+  return date.toLocaleDateString("en-US", { weekday: "short" });
 }
 
-export default class AgendaScreen extends Component<State> {
-  state: State = {
-    items: undefined
-  };
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
 
-  // reservationsKeyExtractor = (item, index) => {
-  //   return `${item?.reservation?.day}${index}`;
-  // };
+function dateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
-  render() {
-    return (
-      <Agenda
-        testID={testIDs.agenda.CONTAINER}
-        items={this.state.items}
-        loadItemsForMonth={this.loadItems}
-        selected={Date.now()}
-        renderItem={this.renderItem}
-        renderEmptyDate={this.renderEmptyDate}
-        rowHasChanged={this.rowHasChanged}
-        showClosingKnob={true}
-        // markingType={'period'}
-        // markedDates={{
-        //    '2017-05-08': {textColor: '#43515c'},
-        //    '2017-05-09': {textColor: '#43515c'},
-        //    '2017-05-14': {startingDay: true, endingDay: true, color: 'blue'},
-        //    '2017-05-21': {startingDay: true, color: 'blue'},
-        //    '2017-05-22': {endingDay: true, color: 'gray'},
-        //    '2017-05-24': {startingDay: true, color: 'gray'},
-        //    '2017-05-25': {color: 'gray'},
-        //    '2017-05-26': {endingDay: true, color: 'gray'}}}
-        // monthFormat={'yyyy'}
-        // theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
-        // renderDay={this.renderDay}
-        // hideExtraDays={false}
-        // showOnlySelectedDayItems
-        // reservationsKeyExtractor={this.reservationsKeyExtractor}
-      />
-    );
-  }
+function buildWeek() {
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() + index - 3);
+    return date;
+  });
+}
 
-  loadItems = (day: DateData) => {
-    const items = this.state.items || {};
+export default function AgendaScreen() {
+  const week = useMemo(buildWeek, []);
+  const todayKey = dateKey(new Date());
+  const [selectedDate, setSelectedDate] = useState(todayKey);
+  const [entries, setEntries] = useState<AgendaEntry[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const weekStart = dateKey(week[0]);
+  const weekEnd = dateKey(week[week.length - 1]);
+  const selectedEntries = entries.filter(
+    (entry) => dateKey(new Date(entry.date)) === selectedDate
+  );
 
-    setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
-        const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-        const strTime = this.timeToString(time);
+  useEffect(() => {
+    let cancelled = false;
 
-        if (!items[strTime]) {
-          items[strTime] = [];
-          
-          const numItems = Math.floor(Math.random() * 3 + 1);
-          for (let j = 0; j < numItems; j++) {
-            items[strTime].push({
-              name: 'Item for ' + strTime + ' #' + j,
-              height: Math.max(50, Math.floor(Math.random() * 150)),
-              day: strTime
-            });
-          }
-        }
+    async function loadEntries() {
+      setIsLoading(true);
+      setError("");
+
+      try {
+        const response = await api.get<AgendaEntry[]>("/food-entries/", {
+          params: { start_date: weekStart, end_date: weekEnd },
+        });
+        if (!cancelled) setEntries(response.data);
+      } catch (err) {
+        console.error("Failed to load agenda entries:", err);
+        if (!cancelled) setError("Unable to load saved entries.");
+      } finally {
+        if (!cancelled) setIsLoading(false);
       }
-      
-      const newItems: AgendaSchedule = {};
-      Object.keys(items).forEach(key => {
-        newItems[key] = items[key];
-      });
-      this.setState({
-        items: newItems
-      });
-    }, 1000);
-  };
-
-  renderDay = (day: any) => {
-    if (day) {
-      return <Text style={styles.customDay}>{day.getDay()}</Text>;
     }
-    return <View style={styles.dayItem}/>;
-  };
 
-  renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-    const fontSize = isFirst ? 16 : 14;
-    const color = isFirst ? 'black' : '#43515c';
+    loadEntries();
+    return () => {
+      cancelled = true;
+    };
+  }, [weekEnd, weekStart]);
 
-    return (
-      <TouchableOpacity
-        testID={testIDs.agenda.ITEM}
-        style={[styles.item, {height: reservation.height}]}
-        onPress={() => Alert.alert(reservation.name)}
-      >
-        <Text style={{fontSize, color}}>{reservation.name}</Text>
-      </TouchableOpacity>
-    );
-  };
+  return (
+    <AnimatedFruitBackground>
+      <ScrollView contentContainerStyle={styles.content}>
+        <MainPageButton />
 
-  renderEmptyDate = () => {
-    return (
-      <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
-      </View>
-    );
-  };
+        <View style={styles.header}>
+          <Text style={styles.kicker}>Trackerly</Text>
+          <Text style={styles.title}>Agenda</Text>
+          <Text style={styles.subtitle}>Review meals and plans by day.</Text>
+        </View>
 
-  rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
-    return r1.name !== r2.name;
-  };
+        <View style={styles.weekStrip}>
+          {week.map((date) => {
+            const key = dateKey(date);
+            const selected = key === selectedDate;
 
-  timeToString(time: number) {
-    const date = new Date(time);
-    return date.toISOString().split('T')[0];
-  }
+            return (
+              <TouchableOpacity
+                key={key}
+                style={[styles.dayButton, selected && styles.dayButtonActive]}
+                onPress={() => setSelectedDate(key)}
+                activeOpacity={0.86}
+              >
+                <Text
+                  style={[styles.dayName, selected && styles.dayNameActive]}
+                >
+                  {formatDay(date)}
+                </Text>
+                <Text
+                  style={[styles.dayDate, selected && styles.dayDateActive]}
+                >
+                  {formatDate(date)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={styles.panel}>
+          <View style={styles.panelHeader}>
+            <Ionicons name="calendar-outline" size={20} color="#168A68" />
+            <Text style={styles.panelTitle}>
+              {selectedDate === todayKey ? "Today" : "Selected day"}
+            </Text>
+          </View>
+
+          {isLoading ? (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyTitle}>Loading entries</Text>
+            </View>
+          ) : error ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="warning-outline" size={26} color="#B42318" />
+              <Text style={styles.emptyTitle}>{error}</Text>
+            </View>
+          ) : selectedEntries.length ? (
+            selectedEntries.map((entry) => (
+              <View key={entry.id} style={styles.entryRow}>
+                <View style={styles.entryIcon}>
+                  <Ionicons name="restaurant-outline" size={18} color="#168A68" />
+                </View>
+                <View style={styles.entryText}>
+                  <Text style={styles.entryTitle}>{entry.food_name}</Text>
+                  <Text style={styles.entryMeta}>
+                    {[entry.category, entry.portion_size?.amount]
+                      .filter(Boolean)
+                      .join(" - ") || "Saved food entry"}
+                  </Text>
+                </View>
+                <Text style={styles.entryCalories}>
+                  {entry.calories != null ? `${entry.calories} kcal` : "--"}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="add-circle-outline" size={26} color="#168A68" />
+              <Text style={styles.emptyTitle}>No entries yet</Text>
+              <Text style={styles.emptyText}>
+                Add a food entry to start building this day.
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </AnimatedFruitBackground>
+  );
 }
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: 'white',
+  content: {
+    flexGrow: 1,
+    alignItems: "center",
+    paddingHorizontal: 18,
+    paddingTop: 26,
+    paddingBottom: 28,
+  },
+  header: {
+    width: "100%",
+    maxWidth: 430,
+    alignItems: "center",
+    marginBottom: 18,
+  },
+  kicker: {
+    color: "#168A68",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  title: {
+    color: "#18352B",
+    fontSize: 34,
+    fontWeight: "800",
+    lineHeight: 40,
+    letterSpacing: 0,
+    textAlign: "center",
+  },
+  subtitle: {
+    color: "#49645A",
+    fontSize: 16,
+    lineHeight: 23,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  weekStrip: {
+    width: "100%",
+    maxWidth: 430,
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 14,
+  },
+  dayButton: {
     flex: 1,
-    borderRadius: 5,
-    padding: 10,
+    minHeight: 64,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#D9E8DF",
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+  dayButtonActive: {
+    borderColor: "#168A68",
+    backgroundColor: "#168A68",
+  },
+  dayName: {
+    color: "#647970",
+    fontSize: 12,
+    fontWeight: "800",
+    lineHeight: 16,
+    textAlign: "center",
+  },
+  dayNameActive: {
+    color: "#FFFFFF",
+  },
+  dayDate: {
+    color: "#18352B",
+    fontSize: 12,
+    fontWeight: "800",
+    lineHeight: 16,
+    marginTop: 3,
+    textAlign: "center",
+  },
+  dayDateActive: {
+    color: "#FFFFFF",
+  },
+  panel: {
+    width: "100%",
+    maxWidth: 430,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.94)",
+    padding: 16,
+  },
+  panelHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 10,
+  },
+  panelTitle: {
+    color: "#18352B",
+    fontSize: 17,
+    fontWeight: "800",
+    lineHeight: 22,
+  },
+  entryRow: {
+    minHeight: 68,
+    flexDirection: "row",
+    alignItems: "center",
+    borderTopColor: "#EAF2EE",
+    borderTopWidth: 1,
+  },
+  entryIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#EAF7F1",
     marginRight: 10,
-    marginTop: 17
   },
-  emptyDate: {
-    height: 15,
+  entryText: {
     flex: 1,
-    paddingTop: 30
+    paddingRight: 8,
   },
-  customDay: {
-    margin: 10,
-    fontSize: 24,
-    color: 'green'
+  entryTitle: {
+    color: "#18352B",
+    fontSize: 15,
+    fontWeight: "800",
+    lineHeight: 20,
   },
-  dayItem: {
-    marginLeft: 34
-  }
+  entryMeta: {
+    color: "#647970",
+    fontSize: 13,
+    lineHeight: 18,
+    marginTop: 2,
+  },
+  entryCalories: {
+    color: "#18352B",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 20,
+  },
+  emptyState: {
+    minHeight: 160,
+    alignItems: "center",
+    justifyContent: "center",
+    borderTopColor: "#EAF2EE",
+    borderTopWidth: 1,
+    paddingHorizontal: 20,
+  },
+  emptyTitle: {
+    color: "#18352B",
+    fontSize: 17,
+    fontWeight: "800",
+    lineHeight: 22,
+    marginTop: 10,
+    textAlign: "center",
+  },
+  emptyText: {
+    color: "#647970",
+    fontSize: 14,
+    lineHeight: 20,
+    marginTop: 4,
+    textAlign: "center",
+  },
 });

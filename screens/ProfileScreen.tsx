@@ -1,173 +1,245 @@
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
   ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const ProfileScreen = () => {
-  const navigation = useNavigation<any>();
+import AnimatedFruitBackground from "../app/AnimatedFruitBackground";
+import MainPageButton from "../components/MainPageButton";
+
+function StatItem({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) {
   return (
-    <>
-      <StatusBar barStyle="light-content" backgroundColor="#3b5998" />
-      <ScrollView style={styles.container}>
-        {/* Profile Header */}
-        <View style={styles.profileHeader}>
-          <Image
-            source={require("C:/Dev/trackerly/data/Screenshot 2024-07-15 191210.png")}
-            style={styles.profileImage}
-          />
-          <Text style={styles.userName}>John Doe</Text>
-          <Text style={styles.userGoal}>Goal: Lose 10 lbs</Text>
-          <TouchableOpacity style={styles.editButton}>
-            <Text
-              style={styles.editButtonText}
-              onPress={() => navigation.navigate("editprofile")}
-            >
-              Edit Profile
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Fitness Stats */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>2000</Text>
-            <Text style={styles.statLabel}>Calories</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>5</Text>
-            <Text style={styles.statLabel}>Workouts</Text>
-          </View>
-          <View style={styles.statBox}>
-            <Text style={styles.statValue}>8</Text>
-            <Text style={styles.statLabel}>Hours Sleep</Text>
-          </View>
-        </View>
-
-        {/* Food & Fitness Tracking */}
-        <View style={styles.trackingContainer}>
-          <Text style={styles.sectionTitle}>Today's Tracking</Text>
-
-          <View style={styles.trackingRow}>
-            <Text style={styles.trackingLabel}>Breakfast</Text>
-            <Text style={styles.trackingValue}>300 kcal</Text>
-          </View>
-          <View style={styles.trackingRow}>
-            <Text style={styles.trackingLabel}>Lunch</Text>
-            <Text style={styles.trackingValue}>500 kcal</Text>
-          </View>
-          <View style={styles.trackingRow}>
-            <Text style={styles.trackingLabel}>Dinner</Text>
-            <Text style={styles.trackingValue}>700 kcal</Text>
-          </View>
-          <View style={styles.trackingRow}>
-            <Text style={styles.trackingLabel}>Water Intake</Text>
-            <Text style={styles.trackingValue}>2L</Text>
-          </View>
-        </View>
-
-        {/* Weekly Summary */}
-        <View style={styles.summaryContainer}>
-          <Text style={styles.sectionTitle}>Weekly Summary</Text>
-          <Text style={styles.summaryText}>
-            Total Calories Burned: 14000 kcal
-          </Text>
-          <Text style={styles.summaryText}>Total Steps: 50,000</Text>
-          <Text style={styles.summaryText}>Average Sleep: 7 hours</Text>
-        </View>
-      </ScrollView>
-    </>
+    <View style={styles.statItem}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
   );
-};
+}
+
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <View style={styles.detailRow}>
+      <Text style={styles.detailLabel}>{label}</Text>
+      <Text style={styles.detailValue}>{value}</Text>
+    </View>
+  );
+}
+
+export default function ProfileScreen() {
+  const navigation = useNavigation<any>();
+
+  return (
+    <AnimatedFruitBackground>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView contentContainerStyle={styles.content}>
+        <MainPageButton />
+
+        <View style={styles.header}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>U</Text>
+          </View>
+          <Text style={styles.kicker}>Profile</Text>
+          <Text style={styles.title}>Your Profile</Text>
+          <Text style={styles.subtitle}>Goal: Set your health goal</Text>
+        </View>
+
+        <View style={styles.statsRow}>
+          <StatItem value="2000" label="Calories" />
+          <StatItem value="5" label="Workouts" />
+          <StatItem value="8h" label="Sleep" />
+        </View>
+
+        <View style={styles.panel}>
+          <View style={styles.panelHeader}>
+            <Ionicons name="today-outline" size={20} color="#168A68" />
+            <Text style={styles.panelTitle}>Today</Text>
+          </View>
+          <DetailRow label="Breakfast" value="300 kcal" />
+          <DetailRow label="Lunch" value="500 kcal" />
+          <DetailRow label="Dinner" value="700 kcal" />
+          <DetailRow label="Water" value="2L" />
+        </View>
+
+        <View style={styles.panel}>
+          <View style={styles.panelHeader}>
+            <Ionicons name="bar-chart-outline" size={20} color="#168A68" />
+            <Text style={styles.panelTitle}>Weekly summary</Text>
+          </View>
+          <DetailRow label="Calories burned" value="14,000 kcal" />
+          <DetailRow label="Steps" value="50,000" />
+          <DetailRow label="Average sleep" value="7 hours" />
+        </View>
+
+        <TouchableOpacity
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate("editprofile")}
+          activeOpacity={0.86}
+        >
+          <Ionicons name="create-outline" size={20} color="#FFFFFF" />
+          <Text style={styles.primaryButtonText}>Edit profile</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </AnimatedFruitBackground>
+  );
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  profileHeader: {
+  content: {
+    flexGrow: 1,
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 18,
+    paddingTop: 34,
+    paddingBottom: 28,
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 10,
+  header: {
+    width: "100%",
+    maxWidth: 430,
+    alignItems: "center",
+    marginBottom: 18,
   },
-  userName: {
-    fontSize: 22,
-    fontWeight: "bold",
+  avatar: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#168A68",
+    marginBottom: 14,
   },
-  userGoal: {
-    color: "#777",
-    fontSize: 16,
+  avatarText: {
+    color: "#FFFFFF",
+    fontSize: 26,
+    fontWeight: "800",
+    letterSpacing: 0,
   },
-  editButton: {
-    marginTop: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    backgroundColor: "#4CAF50",
-    borderRadius: 20,
-  },
-  editButtonText: {
-    color: "#fff",
+  kicker: {
+    color: "#168A68",
     fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginBottom: 6,
+    textAlign: "center",
   },
-  statsContainer: {
+  title: {
+    color: "#18352B",
+    fontSize: 34,
+    fontWeight: "800",
+    lineHeight: 40,
+    letterSpacing: 0,
+    textAlign: "center",
+  },
+  subtitle: {
+    color: "#49645A",
+    fontSize: 16,
+    lineHeight: 23,
+    marginTop: 6,
+    textAlign: "center",
+  },
+  statsRow: {
+    width: "100%",
+    maxWidth: 430,
     flexDirection: "row",
-    justifyContent: "space-around",
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
+    gap: 10,
+    marginBottom: 14,
   },
-  statBox: {
+  statItem: {
+    flex: 1,
+    minHeight: 76,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
   },
   statValue: {
-    fontSize: 18,
-    fontWeight: "bold",
+    color: "#18352B",
+    fontSize: 22,
+    fontWeight: "800",
+    lineHeight: 28,
   },
   statLabel: {
-    color: "#777",
+    color: "#647970",
+    fontSize: 13,
+    fontWeight: "700",
+    lineHeight: 18,
+    textAlign: "center",
   },
-  trackingContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  panel: {
+    width: "100%",
+    maxWidth: 430,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.94)",
+    padding: 16,
+    marginBottom: 14,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
+  panelHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
     marginBottom: 10,
   },
-  trackingRow: {
+  panelTitle: {
+    color: "#18352B",
+    fontSize: 17,
+    fontWeight: "800",
+    lineHeight: 22,
+  },
+  detailRow: {
+    minHeight: 38,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderColor: "#eee",
+    borderTopColor: "#EAF2EE",
+    borderTopWidth: 1,
   },
-  trackingLabel: {
+  detailLabel: {
+    color: "#647970",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  detailValue: {
+    color: "#18352B",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 20,
+  },
+  primaryButton: {
+    width: "100%",
+    maxWidth: 430,
+    minHeight: 52,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 8,
+    backgroundColor: "#168A68",
+  },
+  primaryButtonText: {
+    color: "#FFFFFF",
     fontSize: 16,
-  },
-  trackingValue: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  summaryContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  summaryText: {
-    fontSize: 16,
-    marginVertical: 2,
+    fontWeight: "800",
+    letterSpacing: 0,
   },
 });
-
-export default ProfileScreen;

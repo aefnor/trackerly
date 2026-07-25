@@ -1,8 +1,17 @@
 import api from "@/axios/api";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet, Alert } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-// Define the type for the form fields
+import AnimatedFruitBackground from "./AnimatedFruitBackground";
+
 interface SignupForm {
   username: string;
   email: string;
@@ -11,7 +20,8 @@ interface SignupForm {
   last_name: string;
 }
 
-const Signup: React.FC = () => {
+export default function Signup() {
+  const navigation = useNavigation<any>();
   const [formData, setFormData] = useState<SignupForm>({
     username: "",
     email: "",
@@ -19,129 +29,257 @@ const Signup: React.FC = () => {
     first_name: "",
     last_name: "",
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-
-  // Handle form field changes
   const handleChange = (name: keyof SignupForm, value: string) => {
     setFormData({ ...formData, [name]: value });
-    setError(""); // Clear error message on input change
+    setError("");
+    setSuccess("");
   };
 
-  // Handle form submission
   const handleSubmit = async () => {
-    setError(""); // Clear previous error
-    setSuccess(""); // Clear previous success message
+    setError("");
+    setSuccess("");
 
-    // Basic validation
-    if (!formData.username || !formData.email || !formData.password) {
-      setError("All fields are required.");
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.first_name ||
+      !formData.last_name
+    ) {
+      setError("Fill out every field to create your account.");
       return;
     }
 
-    // Simulate a signup process (replace this with your API call)
     try {
-      // Simulating an API request
       await api.post("/signup/", formData);
-      setSuccess(
-        "Signup successful! Please check your email for verification."
-      );
+      setSuccess("Account created. You can sign in now.");
       setFormData({
         username: "",
         email: "",
         password: "",
         first_name: "",
         last_name: "",
-      }); // Clear form
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("An unexpected error occurred");
-      }
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to create account.");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        placeholderTextColor="#000"
-        value={formData.username}
-        onChangeText={(value) => handleChange("username", value)}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#000"
-        value={formData.email}
-        onChangeText={(value) => handleChange("email", value)}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#000"
-        value={formData.password}
-        onChangeText={(value) => handleChange("password", value)}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="First Name"
-        placeholderTextColor="#000"
-        value={formData.first_name}
-        onChangeText={(value) => handleChange("first_name", value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Last Name"
-        placeholderTextColor="#000"
-        value={formData.last_name}
-        onChangeText={(value) => handleChange("last_name", value)}
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      {success ? <Text style={styles.success}>{success}</Text> : null}
-      <Button title="Sign Up" onPress={handleSubmit} />
-    </View>
+    <AnimatedFruitBackground>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={styles.kicker}>Trackerly</Text>
+          <Text style={styles.title}>Create account</Text>
+          <Text style={styles.subtitle}>
+            Set up a profile so your meals and scans stay connected.
+          </Text>
+        </View>
+
+        <View style={styles.formPanel}>
+          <Text style={styles.label}>Username</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="username"
+            placeholderTextColor="#8A9590"
+            value={formData.username}
+            onChangeText={(value) => handleChange("username", value)}
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="you@example.com"
+            placeholderTextColor="#8A9590"
+            value={formData.email}
+            onChangeText={(value) => handleChange("email", value)}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#8A9590"
+            value={formData.password}
+            onChangeText={(value) => handleChange("password", value)}
+            secureTextEntry
+          />
+
+          <View style={styles.nameRow}>
+            <View style={styles.nameField}>
+              <Text style={styles.label}>First name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="First name"
+                placeholderTextColor="#8A9590"
+                value={formData.first_name}
+                onChangeText={(value) => handleChange("first_name", value)}
+              />
+            </View>
+            <View style={styles.nameField}>
+              <Text style={styles.label}>Last name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Last name"
+                placeholderTextColor="#8A9590"
+                value={formData.last_name}
+                onChangeText={(value) => handleChange("last_name", value)}
+              />
+            </View>
+          </View>
+
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          {success ? <Text style={styles.success}>{success}</Text> : null}
+
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={handleSubmit}
+            activeOpacity={0.86}
+          >
+            <Text style={styles.primaryButtonText}>Create account</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate("signin")}
+            activeOpacity={0.86}
+          >
+            <Text style={styles.secondaryButtonText}>Back to sign in</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </AnimatedFruitBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  content: {
+    flexGrow: 1,
+    alignItems: "center",
     justifyContent: "center",
-    padding: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 28,
+  },
+  header: {
+    width: "100%",
+    maxWidth: 430,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  kicker: {
+    color: "#168A68",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 18,
+    marginBottom: 8,
+    textAlign: "center",
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 24,
+    color: "#18352B",
+    fontSize: 34,
+    fontWeight: "800",
+    lineHeight: 40,
+    letterSpacing: 0,
     textAlign: "center",
+  },
+  subtitle: {
+    color: "#49645A",
+    fontSize: 16,
+    lineHeight: 23,
+    marginTop: 8,
+    maxWidth: 360,
+    textAlign: "center",
+  },
+  formPanel: {
+    width: "100%",
+    maxWidth: 430,
+    borderRadius: 8,
+    borderColor: "#D9E8DF",
+    borderWidth: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.94)",
+    padding: 18,
+    shadowColor: "#0F2E24",
+    shadowOpacity: 0.12,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
+  },
+  label: {
+    color: "#29483D",
+    fontSize: 14,
+    fontWeight: "700",
+    lineHeight: 18,
+    marginBottom: 7,
   },
   input: {
     height: 50,
-    borderColor: "#ccc",
+    borderColor: "#C9DDD3",
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 16,
+    borderRadius: 8,
+    color: "#18352B",
+    fontSize: 16,
+    paddingHorizontal: 14,
+    marginBottom: 12,
+    backgroundColor: "#FFFFFF",
+  },
+  nameRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  nameField: {
+    flex: 1,
   },
   error: {
-    color: "red",
-    marginBottom: 16,
+    color: "#B42318",
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 10,
     textAlign: "center",
   },
   success: {
-    color: "green",
-    marginBottom: 16,
+    color: "#168A68",
+    fontSize: 13,
+    lineHeight: 18,
+    marginBottom: 10,
     textAlign: "center",
   },
+  primaryButton: {
+    minHeight: 52,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#168A68",
+    marginTop: 4,
+  },
+  primaryButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: 0,
+  },
+  secondaryButton: {
+    minHeight: 50,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#168A68",
+    borderWidth: 1,
+    marginTop: 12,
+    backgroundColor: "#FFFFFF",
+  },
+  secondaryButtonText: {
+    color: "#168A68",
+    fontSize: 16,
+    fontWeight: "800",
+    letterSpacing: 0,
+  },
 });
-
-export default Signup;
